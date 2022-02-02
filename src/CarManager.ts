@@ -1,16 +1,38 @@
 import { Car } from "./Car";
+import * as fs from "fs";
+import * as moment from "moment";
 
-export class CarManager{
+export class CarManager {
+    //Singleton für einfachen Zugriff auf CarManager
+    private static instance: CarManager;
 
-    public ListOfAvailableCars(): Car[]{
+    private constructor() {}
+
+    public static getInstance(): CarManager {
+        if (!CarManager.instance) {
+            CarManager.instance = new CarManager();
+        }
+
+        return CarManager.instance;
+    }
+    public ListOfAvailableCars(): Car[] {
+        let rawData = fs.readFileSync("data/cars.json");
+        let carData = JSON.parse(rawData.toString());
+        let carObjects: Car[] = [];
+        carData.forEach((element) => {
+            console.log(element);
+            let newCar = new Car(element.description, element.electricDriveType, moment(element.earliestUsageTime), moment(element.latestUsageTime), element.maxUsageDurationMinutes, element.flatRatePrice, element.pricePerMin);
+            carObjects.push(newCar);
+        });
+        console.log(carObjects);
+        return carObjects;
+    }
+
+    public addNewCar(): Car[] {
         return null;
     }
 
-    public addNewCar(): Car[]{
-        return null;
-    }
-
-    public searchCar(): Car[]{
+    public searchCar(): Car[] {
         return null;
     }
 }
