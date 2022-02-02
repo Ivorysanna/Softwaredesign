@@ -1,15 +1,18 @@
 import { User } from "./User";
 import { Car } from "./Car";
+import { Moment } from "moment";
 
-export class Ride{
-    public date: number;
-    public time: number;
-    public duration: number;
-    public userbookedRide: User;
+export class Ride {
+    public date: Moment;
+    public time: Moment;
+    public duration: Moment;
+    public user: User;
     public bookedCar: Car;
-    public priceForRide: number;
+    public flatRatePrice: number;
+    public pricePerMinute: number;
+    
 
-    public bookCar(): Car{
+    public bookCar(): Car {
         return null;
     }
 }

@@ -1,0 +1,20 @@
+[
+    {
+        "user_ID": 1234,
+        "date": "02.02.2022",
+        "duration": 40,
+        "car_ID": 2345,
+        "flatRatePrice": 20,
+        "pricePerMinute": 0.5 
+
+    },
+
+    {
+        "user_ID": 1235,
+        "date": "03.02.2022",
+        "duration": 60,
+        "car_ID": 2345,
+        "flatRatePrice": 20,
+        "pricePerMinute": 0.5 
+    }
+]
