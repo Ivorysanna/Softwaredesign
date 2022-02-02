@@ -1,0 +1,7 @@
+{
+    "name": "John",
+    "bookedRides": [
+           {"car" : "toyota", "timeUsed" : 30 },
+           {"car": "tesla", "timeUsed": 60 }
+    ]
+}
