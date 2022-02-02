@@ -18,7 +18,7 @@ var User = /** @class */ (function () {
         var bookedRides = allRides["bookedRides"];
         var logAllRides = 0;
         for (var i = 0; i < bookedRides.length; i++) {
-            logAllRides += bookedRides[i].timeUsed;
+            logAllRides += bookedRides[i].price;
         }
         var averageCost = logAllRides / bookedRides.length;
         return "Durchschnittskosten betragen: " + averageCost + " €.";
