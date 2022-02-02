@@ -1,7 +1,7 @@
 {
     "name": "John",
     "bookedRides": [
-           {"car" : "toyota", "timeUsed" : 30 },
-           {"car": "tesla", "timeUsed": 60 }
+           {"car" : "toyota", "price" : 30 },
+           {"car": "tesla", "price": 60 }
     ]
 }

@@ -1,7 +1,7 @@
 import { User } from "./User";
 import { Car } from "./Car";
 
-export class Rides{
+export class Ride{
     public date: number;
     public time: number;
     public duration: number;

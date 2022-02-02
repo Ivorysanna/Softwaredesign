@@ -1,13 +1,11 @@
-import { Rides } from "./Rides";
 import * as fs from "fs";
 
 export class User{
     public user_ID: number;
-    public registered: Boolean;
     public userName: string;
+    public lastName: string;
     public password: string;
-    public averageCosts: number;
-    public accumaltedAmountRides: number;
+    
 
     public pastBookedRides(): String{
         let allRides = fs.readFileSync('data/bookedRides.json');
@@ -23,7 +21,7 @@ export class User{
         let bookedRides = allRides["bookedRides"];
         let logAllRides = 0;
         for(let i = 0; i < bookedRides.length; i++){
-            logAllRides += bookedRides[i].timeUsed;
+            logAllRides += bookedRides[i].price;
         }
         let averageCost = logAllRides / bookedRides.length;
         return "Durchschnittskosten betragen: " + averageCost + " €.";
