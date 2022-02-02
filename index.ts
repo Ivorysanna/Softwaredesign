@@ -1,4 +1,5 @@
+import { CarManager } from "./src/CarManager";
 import { Control } from "./src/Control";
 let control: Control = new Control();
-
-control.main()
+CarManager.getInstance().ListOfAvailableCars();
+//control.main()
