@@ -11,6 +11,7 @@ var User = /** @class */ (function () {
         console.log(outputRides);
         return "Bis jetzt wurden: " + outputRides + " gebucht.";
     };
+    //Average Cost wird berechnet
     User.prototype.averageCost = function () {
         var rawData = fs.readFileSync('data/bookedRides.json');
         var allRides = JSON.parse(rawData.toString());
@@ -20,9 +21,7 @@ var User = /** @class */ (function () {
             logAllRides += bookedRides[i].timeUsed;
         }
         var averageCost = logAllRides / bookedRides.length;
-        //console.log(averageCost);
-        //let averageCost = logAllRides
-        return "Durchschnittskosten betragen:  " + averageCost + " €.";
+        return "Durchschnittskosten betragen: " + averageCost + " €.";
     };
     return User;
 }());

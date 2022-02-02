@@ -1,7 +1,7 @@
-import { User } from "./user";
-import { Car } from "./car";
+import { User } from "./User";
+import { Car } from "./Car";
 
-export class BookedRides{
+export class Rides{
     public date: number;
     public time: number;
     public duration: number;

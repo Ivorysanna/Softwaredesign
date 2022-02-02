@@ -1,5 +1,5 @@
 "use strict";
 exports.__esModule = true;
-var control_1 = require("./src/control");
-var control = new control_1.Control();
+var Control_1 = require("./src/Control");
+var control = new Control_1.Control();
 control.main();

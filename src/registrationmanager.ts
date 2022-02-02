@@ -1,6 +1,6 @@
-import { User } from "./user";
+import { User } from "./User";
 
-export class registration{
+export class Registration{
     public userPath: string;
 
 

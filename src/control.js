@@ -1,12 +1,12 @@
 "use strict";
 exports.__esModule = true;
 exports.Control = void 0;
-var user_1 = require("./user");
+var User_1 = require("./User");
 var Control = /** @class */ (function () {
     function Control() {
     }
     Control.prototype.main = function () {
-        var testUser = new user_1.User;
+        var testUser = new User_1.User;
         testUser.pastBookedRides();
         console.log(testUser.averageCost());
     };

@@ -1,3 +1,7 @@
 export class Car{
-    public status: Boolean;
+
+
+    public getCarStatus():boolean{
+        return true;
+    }
 }
