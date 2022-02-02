@@ -15,4 +15,8 @@ export class Ride {
     public bookCar(): Car {
         return null;
     }
+
+    public calculateCost(): number{
+        return 1;
+    }
 }
