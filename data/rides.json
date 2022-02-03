@@ -1,7 +1,7 @@
 [
     {
         "user_ID": 1234,
-        "date": "02.02.2022",
+        "timestamp": "02.02.2022T14:00:00",
         "duration": 40,
         "car_ID": 2345,
         "flatRatePrice": 20,
@@ -11,7 +11,7 @@
 
     {
         "user_ID": 1235,
-        "date": "03.02.2022",
+        "timestamp": "03.02.2022T15:00:00",
         "duration": 60,
         "car_ID": 2345,
         "flatRatePrice": 20,
