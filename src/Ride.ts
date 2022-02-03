@@ -1,11 +1,10 @@
 import { User } from "./User";
 import { Car } from "./Car";
-import { Moment } from "moment";
+import { DateTime, Duration } from "luxon";
 
 export class Ride {
-    public date: Moment;
-    public time: Moment;
-    public duration: Moment;
+    public timestamp: DateTime;
+    public duration: Duration;
     public user: User;
     public bookedCar: Car;
     public flatRatePrice: number;

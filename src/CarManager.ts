@@ -1,6 +1,6 @@
 import { Car } from './Car';
 import * as fs from 'fs';
-import * as moment from 'moment';
+import { DateTime } from "luxon";
 
 export class CarManager {
     //Singleton für einfachen Zugriff auf CarManager
@@ -24,8 +24,8 @@ export class CarManager {
             let newCar = new Car(
                 element.description,
                 element.electricDriveType,
-                moment('1.1.2000 ' + element.earliestUsageTime),
-                moment('1.1.2000 ' + element.latestUsageTime),
+                DateTime.fromISO('2000-1-1T' + element.earliestUsageTime),
+                DateTime.fromISO('2000-1-1T' + element.latestUsageTime),
                 element.maxUsageDurationMinutes,
                 element.flatRatePrice,
                 element.pricePerMin
