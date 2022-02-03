@@ -3,98 +3,41 @@
  * run example by writing `node pizza.js` in your console
  */
 
- 'use strict';
- const inquirer = require('inquirer');
- 
- console.log('Hi, welcome to Node Pizza');
- 
- const questions = [
-   {
-     type: 'confirm',
-     name: 'toBeDelivered',
-     message: 'Is this for delivery?',
-     default: false,
-   },
-   {
-     type: 'input',
-     name: 'phone',
-     message: "What's your phone number?",
-     validate(value) {
-       const pass = value.match(
-         /^([01]{1})?[-.\s]?\(?(\d{3})\)?[-.\s]?(\d{3})[-.\s]?(\d{4})\s?((?:#|ext\.?\s?|x\.?\s?){1}(?:\d+)?)?$/i
-       );
-       if (pass) {
-         return true;
-        }
- 
-       return 'Please enter a valid phone number';
-     },
-   },
-   {
-     type: 'list',
-     name: 'size',
-     message: 'What size do you need?',
-     choices: ['Large', 'Medium', 'Small'],
-     filter(val) {
-       return val.toLowerCase();
-     },
-   },
-   {
-     type: 'input',
-     name: 'quantity',
-     message: 'How many do you need?',
-     validate(value) {
-       const valid = !isNaN(parseFloat(value));
-       return valid || 'Please enter a number';
-     },
-     filter: Number,
-   },
-   {
-     type: 'expand',
-     name: 'toppings',
-     message: 'What about the toppings?',
-     choices: [
-       {
-         key: 'p',
-         name: 'Pepperoni and cheese',
-         value: 'PepperoniCheese',
-       },
-       {
-         key: 'a',
-         name: 'All dressed',
-         value: 'alldressed',
-       },
-       {
-         key: 'w',
-         name: 'Hawaiian',
-         value: 'hawaiian',
-       },
-     ],
-   },
-   {
-     type: 'rawlist',
-     name: 'beverage',
-     message: 'You also get a free 2L beverage',
-     choices: ['Pepsi', '7up', 'Coke'],
-   },
-   {
-     type: 'input',
-     name: 'comments',
-     message: 'Any comments on your purchase experience?',
-     default: 'Nope, all good!',
-   },
-   {
-     type: 'list',
-     name: 'prize',
-     message: 'For leaving a comment, you get a freebie',
-     choices: ['cake', 'fries'],
-     when(answers) {
-       return answers.comments !== 'Nope, all good!';
-     },
-   },
- ];
- 
- inquirer.prompt(questions).then((answers) => {
-   console.log('\nOrder receipt:');
-   console.log(JSON.stringify(answers, null, '  '));
- });
+'use strict';
+const inquirer = require('inquirer');
+
+const choices = Array.apply(0, new Array(26)).map((x, y) =>
+    String.fromCharCode(y + 65)
+);
+choices.push('Multiline option 1\n  super cool feature \n  more lines');
+choices.push('Multiline option 2\n  super cool feature \n  more lines');
+choices.push('Multiline option 3\n  super cool feature \n  more lines');
+choices.push('Multiline option 4\n  super cool feature \n  more lines');
+choices.push('Multiline option 5\n  super cool feature \n  more lines');
+choices.push(new inquirer.Separator());
+choices.push('Multiline option \n  super cool feature');
+choices.push({
+    name: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.',
+    value: 'foo',
+    short: 'The long option',
+});
+
+inquirer
+    .prompt([
+        {
+            type: 'list',
+            loop: false,
+            name: 'letter',
+            message: "What's your favorite letter?",
+            choices,
+        },
+        {
+            type: 'checkbox',
+            name: 'name',
+            message: 'Select the letter contained in your name:',
+            choices,
+        },
+    ])
+    .then((answers) => {
+        console.log(JSON.stringify(answers, null, '  '));
+    });

@@ -6,14 +6,14 @@ var User = /** @class */ (function () {
     function User() {
     }
     User.prototype.pastBookedRides = function () {
-        var allRides = fs.readFileSync('data/bookedRides.json');
+        var allRides = fs.readFileSync('data/rides.json');
         var outputRides = JSON.parse(allRides.toString());
-        console.log(outputRides);
+        //console.log(outputRides);
         return "Bis jetzt wurden: " + outputRides + " gebucht.";
     };
     //Average Cost wird berechnet
     User.prototype.averageCost = function () {
-        var rawData = fs.readFileSync('data/bookedRides.json');
+        var rawData = fs.readFileSync('data/rides.json');
         var allRides = JSON.parse(rawData.toString());
         var bookedRides = allRides["bookedRides"];
         var logAllRides = 0;

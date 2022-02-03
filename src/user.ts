@@ -8,15 +8,15 @@ export class User{
     
 
     public pastBookedRides(): String{
-        let allRides = fs.readFileSync('data/bookedRides.json');
+        let allRides = fs.readFileSync('data/rides.json');
         let outputRides = JSON.parse(allRides.toString());
-        console.log(outputRides);
+        //console.log(outputRides);
         return "Bis jetzt wurden: " + outputRides + " gebucht.";
     }
 
         //Average Cost wird berechnet
     public averageCost():String{
-        let rawData= fs.readFileSync('data/bookedRides.json');
+        let rawData= fs.readFileSync('data/rides.json');
         let allRides = JSON.parse(rawData.toString());
         let bookedRides = allRides["bookedRides"];
         let logAllRides = 0;
