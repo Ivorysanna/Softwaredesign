@@ -14,12 +14,12 @@ var CarManager = /** @class */ (function () {
         return CarManager.instance;
     };
     CarManager.prototype.ListOfAvailableCars = function () {
-        var rawData = fs.readFileSync("data/cars.json");
+        var rawData = fs.readFileSync('data/cars.json');
         var carData = JSON.parse(rawData.toString());
         var carObjects = [];
         carData.forEach(function (element) {
             console.log(element);
-            var newCar = new Car_1.Car(element.description, element.electricDriveType, moment(element.earliestUsageTime), moment(element.latestUsageTime), element.maxUsageDurationMinutes, element.flatRatePrice, element.pricePerMin);
+            var newCar = new Car_1.Car(element.description, element.electricDriveType, moment('1.1.2000 ' + element.earliestUsageTime), moment('1.1.2000 ' + element.latestUsageTime), element.maxUsageDurationMinutes, element.flatRatePrice, element.pricePerMin);
             carObjects.push(newCar);
         });
         console.log(carObjects);
