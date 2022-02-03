@@ -3,7 +3,7 @@ exports.__esModule = true;
 exports.CarManager = void 0;
 var Car_1 = require("./Car");
 var fs = require("fs");
-var moment = require("moment");
+var luxon_1 = require("luxon");
 var CarManager = /** @class */ (function () {
     function CarManager() {
     }
@@ -18,11 +18,11 @@ var CarManager = /** @class */ (function () {
         var carData = JSON.parse(rawData.toString());
         var carObjects = [];
         carData.forEach(function (element) {
-            console.log(element);
-            var newCar = new Car_1.Car(element.description, element.electricDriveType, moment('1.1.2000 ' + element.earliestUsageTime), moment('1.1.2000 ' + element.latestUsageTime), element.maxUsageDurationMinutes, element.flatRatePrice, element.pricePerMin);
+            //console.log(element);
+            var newCar = new Car_1.Car(element.car_ID, element.description, element.electricDriveType, luxon_1.DateTime.fromISO('2000-01-01T' + element.earliestUsageTime), luxon_1.DateTime.fromISO('2000-01-01T' + element.latestUsageTime), element.maxUsageDurationMinutes, element.flatRatePrice, element.pricePerMin);
             carObjects.push(newCar);
         });
-        console.log(carObjects);
+        //console.log(carObjects);
         return carObjects;
     };
     CarManager.prototype.addNewCar = function () {

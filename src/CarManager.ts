@@ -20,19 +20,20 @@ export class CarManager {
         let carData = JSON.parse(rawData.toString());
         let carObjects: Car[] = [];
         carData.forEach((element) => {
-            console.log(element);
+            //console.log(element);
             let newCar = new Car(
+                element.car_ID,
                 element.description,
                 element.electricDriveType,
-                DateTime.fromISO('2000-1-1T' + element.earliestUsageTime),
-                DateTime.fromISO('2000-1-1T' + element.latestUsageTime),
+                DateTime.fromISO('2000-01-01T' + element.earliestUsageTime),
+                DateTime.fromISO('2000-01-01T' + element.latestUsageTime),
                 element.maxUsageDurationMinutes,
                 element.flatRatePrice,
                 element.pricePerMin
             );
             carObjects.push(newCar);
         });
-        console.log(carObjects);
+        //console.log(carObjects);
         return carObjects;
     }
 
