@@ -1,7 +1,7 @@
 import { User } from "./User";
 import * as inquirer from "inquirer";
 import { CarManager } from "./CarManager";
-import { Car } from "./car";
+import { Car } from "./Car";
 
 export class Control {
     public main(): void {
@@ -11,21 +11,13 @@ export class Control {
                 type: "list",
                 name: "loginOrSearch",
                 message: "Wollen Sie sich anmelden, oder nach Autos suchen?",
-                choices: [
-                    "Anmelden",
-                    "Registrieren",
-                    "Suchen...",
-                    "Alle Fahrzeuge anzeigen",
-                ],
+                choices: ["Anmelden", "Registrieren", "Suchen...", "Alle Fahrzeuge anzeigen"],
             },
             {
                 type: "input",
                 name: "login",
                 message: "Bitte geben Sie Benutzernamen und Passwort ein.",
-                /*validate(value){
-                    //Wird hier Passwort und Benutzer überprüft?
-                },*/
-                when(answers) {
+                when(answers: any) {
                     return answers.loginOrSearch == "Anmelden";
                 },
             },
@@ -33,10 +25,7 @@ export class Control {
                 type: "input",
                 name: "registration",
                 message: "Bitte geben Sie Benutzernamen und Passwort ein.",
-                /*validate(value){
-                    //Wird hier Passwort und Benutzer überprüft mit Regex?
-                },*/
-                when(answers) {
+                when(answers: any) {
                     return answers.loginOrSearch == "Registrieren";
                 },
             },
@@ -48,8 +37,14 @@ export class Control {
                     { name: "Elektronisch", value: true },
                     { name: "Konventionell", value: false },
                 ],
-
-                when(answers) {
+                validate(value: any){
+                    if (value.length > 0) {
+                        return true;
+                    } else {
+                        return "Mindestens eine Antriebsart auswählen!";
+                    }
+                },
+                when(answers: any) {
                     return answers.loginOrSearch == "Suchen...";
                 },
             },
@@ -57,46 +52,47 @@ export class Control {
                 type: "input",
                 name: "searchBrand",
                 message: "Geben Sie Ihre gewünschte Marke ein",
-                /*validate(value){
-                    //Es muss vorgefiltert werten elektrisch/konventionell
-                },*/
-                when(answers) {
+                validate(value: any){
+                    if (value.length > 0) {
+                        return true;
+                    } else {
+                        return "Bitte geben Sie einen Suchbegriff ein!";
+                    }
+                },
+                when(answers: any) {
                     return answers.loginOrSearch == "Suchen...";
                 },
             },
             {
                 type: "list",
                 name: "filteredCars",
-                message: "Eine Liste von allen Autos",
-                choices(answers) {
+                message: "Eine gefilterte Liste von allen Autos eee",
+                choices(answers: any) {
                     console.log("Log: " + answers.driveTypeElectric);
-                    let listOfCars =
-                        CarManager.getInstance().ListOfAvailableCars();
-                    let choicesArray = [];
+                    let listOfCars = CarManager.getInstance().ListOfAvailableCars();
+                    let choicesArray: any = [];
                     listOfCars.forEach((eachCar: Car) => {
-                        choicesArray.push({
-                            name: eachCar.printString(),
-                            value: eachCar.car_ID,
-                        });
+                        if (answers.driveTypeElectric.includes(eachCar.electricDriveType) && true) {
+                            choicesArray.push({
+                                name: eachCar.printString(),
+                                value: eachCar.car_ID,
+                            });
+                        }
                     });
                     return choicesArray;
                 },
-                /*validate(value){
-                    //Wird hier Passwort und Benutzer überprüft mit Regex?
-                },*/
-                // when(answers) {
-                //     return answers.loginOrSearch == 'Suchen...';
-                // },
+                when(answers: any) {
+                    return answers.loginOrSearch == "Suchen...";
+                },
             },
             {
                 type: "list",
                 name: "showAllCars",
                 message: "Eine Liste von allen Autos",
-                choices(answers) {
+                choices(answers: any) {
                     console.log(answers.driveTypeElectric);
-                    let listOfCars =
-                        CarManager.getInstance().ListOfAvailableCars();
-                    let choicesArray = [];
+                    let listOfCars = CarManager.getInstance().ListOfAvailableCars();
+                    let choicesArray: any = [];
                     listOfCars.forEach((eachCar: Car) => {
                         choicesArray.push({
                             name: eachCar.printString(),
@@ -105,10 +101,7 @@ export class Control {
                     });
                     return choicesArray;
                 },
-                /*validate(value){
-                    //Wird hier Passwort und Benutzer überprüft mit Regex?
-                },*/
-                when(answers) {
+                when(answers: any) {
                     return answers.loginOrSearch == "Alle Fahrzeuge anzeigen";
                 },
             },
