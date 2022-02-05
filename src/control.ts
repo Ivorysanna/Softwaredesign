@@ -66,7 +66,7 @@ export class Control {
             {
                 type: "list",
                 name: "filteredCars",
-                message: "Eine gefilterte Liste von allen Autos eee",
+                message: "Eine gefilterte Liste von allen Autos fff",
                 choices(answers: any) {
                     console.log("Log: " + answers.driveTypeElectric);
                     let listOfCars = CarManager.getInstance().ListOfAvailableCars();
@@ -107,7 +107,7 @@ export class Control {
             },
         ];
         inquirer.prompt(questions).then((answers) => {});
-        let testUser: User = new User();
+        //let testUser: User = new User();
         /*testUser.pastBookedRides();
         console.log(testUser.averageCost());*/
     }
