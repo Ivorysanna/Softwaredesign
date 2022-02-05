@@ -8,7 +8,6 @@
         "maxUsageDurationMinutes": 120,
         "flatRatePrice": 20,
         "pricePerMin": 0.5
-
     },
 
     {
@@ -20,6 +19,5 @@
         "maxUsageDurationMinutes": 60,
         "flatRatePrice": 40,
         "pricePerMin": 0.8
-
     }
 ]

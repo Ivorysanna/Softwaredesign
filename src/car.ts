@@ -1,5 +1,5 @@
-import { DateTime } from 'luxon';
-import * as fs from 'fs';
+import { DateTime } from "luxon";
+import * as fs from "fs";
 
 export class Car {
     public car_ID: number;
@@ -34,10 +34,10 @@ export class Car {
     // e.g. "BMW i3 (E) - 9:00-14:00 Uhr, 10€ FP + 3€ pro Min."
     public printString(): string {
         return `${this.description} : ${
-            this.electricDriveType ? '(E)' : ''
+            this.electricDriveType ? "(E)" : ""
         } ${this.earliestUsageTime.toFormat(
-            'HH:mm'
-        )} - ${this.latestUsageTime.toFormat('HH:mm')} Uhr, ${
+            "HH:mm"
+        )} - ${this.latestUsageTime.toFormat("HH:mm")} Uhr, ${
             this.flatRatePrice
         } € Nutzungspreis ${this.pricePerMin} € pro Min.`;
     }
@@ -45,7 +45,7 @@ export class Car {
         return true;
     }
     public getCarDescription(): string {
-        let rawData = fs.readFileSync('data/cars.json');
+        let rawData = fs.readFileSync("data/cars.json");
         let allCars = JSON.parse(rawData.toString());
         //let carDescription = allCars["description"];
         let logAllCars: String[] = [];

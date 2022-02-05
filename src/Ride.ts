@@ -9,13 +9,12 @@ export class Ride {
     public bookedCar: Car;
     public flatRatePrice: number;
     public pricePerMinute: number;
-    
 
     public bookCar(): Car {
         return null;
     }
 
-    public calculateCost(): number{
+    public calculateCost(): number {
         return 1;
     }
 }

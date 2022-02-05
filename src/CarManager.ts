@@ -1,5 +1,5 @@
-import { Car } from './Car';
-import * as fs from 'fs';
+import { Car } from "./Car";
+import * as fs from "fs";
 import { DateTime } from "luxon";
 
 export class CarManager {
@@ -16,7 +16,7 @@ export class CarManager {
         return CarManager.instance;
     }
     public ListOfAvailableCars(): Car[] {
-        let rawData = fs.readFileSync('data/cars.json');
+        let rawData = fs.readFileSync("data/cars.json");
         let carData = JSON.parse(rawData.toString());
         let carObjects: Car[] = [];
         carData.forEach((element) => {
@@ -25,8 +25,8 @@ export class CarManager {
                 element.car_ID,
                 element.description,
                 element.electricDriveType,
-                DateTime.fromISO('2000-01-01T' + element.earliestUsageTime),
-                DateTime.fromISO('2000-01-01T' + element.latestUsageTime),
+                DateTime.fromISO("2000-01-01T" + element.earliestUsageTime),
+                DateTime.fromISO("2000-01-01T" + element.latestUsageTime),
                 element.maxUsageDurationMinutes,
                 element.flatRatePrice,
                 element.pricePerMin

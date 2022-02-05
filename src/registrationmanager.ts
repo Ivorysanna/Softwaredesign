@@ -1,14 +1,13 @@
 import { User } from "./User";
 
-export class Registration{
+export class Registration {
     public userPath: string;
 
-
-    public userRegistration(): User{
+    public userRegistration(): User {
         return null;
     }
 
-    public UserLogIn(): User{
+    public UserLogIn(): User {
         return null;
     }
 }

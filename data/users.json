@@ -4,7 +4,6 @@
         "userName": "John",
         "lastName": "Snow",
         "password": "123"
-        
     },
 
     {
@@ -12,6 +11,5 @@
         "userName": "Kuro",
         "lastName": "Schmurro",
         "password": "futter"
-
     }
 ]
