@@ -10,9 +10,18 @@ export class Ride {
     public flatRatePrice: number;
     public pricePerMinute: number;
 
-    public bookCar(): Car {
-        return null;
+    constructor(timestamp: DateTime, duration: Duration, user: User, bookedCar: Car, flatRatePrice: number, pricePerMinute: number){
+        this.timestamp = timestamp;
+        this.duration = duration;
+        this.user = user;
+        this.bookedCar = bookedCar;
+        this.flatRatePrice = flatRatePrice;
+        this.pricePerMinute = pricePerMinute;
     }
+
+    // public bookCar(): Car {
+    //     return ;
+    // }
 
     public calculateCost(): number {
         return 1;
