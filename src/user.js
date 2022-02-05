@@ -3,7 +3,8 @@ exports.__esModule = true;
 exports.User = void 0;
 var fs = require("fs");
 var User = /** @class */ (function () {
-    function User() {}
+    function User() {
+    }
     User.prototype.pastBookedRides = function () {
         var allRides = fs.readFileSync("data/rides.json");
         var outputRides = JSON.parse(allRides.toString());
@@ -23,5 +24,5 @@ var User = /** @class */ (function () {
         return "Durchschnittskosten betragen: " + averageCost + " €.";
     };
     return User;
-})();
+}());
 exports.User = User;
