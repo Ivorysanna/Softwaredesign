@@ -6,6 +6,13 @@ export class User {
     public lastName: string;
     public password: string;
 
+    constructor( user_ID: number, userName: string, lastName: string, password: string) {
+        this.user_ID = user_ID;
+        this.userName = userName;
+        this.lastName = lastName;
+        this. password = password;
+    }
+
     public pastBookedRides(): String {
         let allRides = fs.readFileSync("data/rides.json");
         let outputRides = JSON.parse(allRides.toString());
