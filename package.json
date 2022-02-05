@@ -13,12 +13,13 @@
     },
     "devDependencies": {
         "@types/inquirer": "^8.2.0",
+        "@types/luxon": "^2.0.9",
         "@types/node": "^17.0.14",
         "prettier": "2.5.1"
     },
     "scripts": {
         "start": "node ./bin/index.js",
-        "watch": "nodemon ./src/index.ts",
+        "watch": "nodemon --no-stdin ./src/index.ts",
         "build": "tsc",
         "prettier": "npx prettier --write ."
     },
