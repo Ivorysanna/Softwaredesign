@@ -19,7 +19,7 @@ export class CarManager {
         let rawData = fs.readFileSync("data/cars.json");
         let carData = JSON.parse(rawData.toString());
         let carObjects: Car[] = [];
-        carData.forEach((element) => {
+        carData.forEach((element: any) => {
             //console.log(element);
             let newCar = new Car(
                 element.car_ID,
@@ -37,11 +37,11 @@ export class CarManager {
         return carObjects;
     }
 
-    public addNewCar(): Car[] {
-        return null;
-    }
+    // public addNewCar(): Car[] {
+    //     return null;
+    // }
 
-    public searchCar(): Car[] {
-        return null;
-    }
+    // public searchCar(): Car[] {
+    //     return null;
+    // }
 }

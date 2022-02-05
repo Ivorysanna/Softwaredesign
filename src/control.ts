@@ -66,13 +66,15 @@ export class Control {
             {
                 type: "list",
                 name: "filteredCars",
-                message: "Eine gefilterte Liste von allen Autos fff",
+                message: "Eine gefilterte Liste von allen Autos",
                 choices(answers: any) {
-                    console.log("Log: " + answers.driveTypeElectric);
+                    console.log(": " + answers.driveTypeElectric);
                     let listOfCars = CarManager.getInstance().ListOfAvailableCars();
                     let choicesArray: any = [];
+                    let regExp = new RegExp("/" + answers.searchBrand + "/i");
                     listOfCars.forEach((eachCar: Car) => {
-                        if (answers.driveTypeElectric.includes(eachCar.electricDriveType) && true) {
+                        let match = eachCar.description.match(regExp) != null; 
+                        if (answers.driveTypeElectric.includes(eachCar.electricDriveType) && match) {
                             choicesArray.push({
                                 name: eachCar.printString(),
                                 value: eachCar.car_ID,
