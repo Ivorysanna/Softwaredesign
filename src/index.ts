@@ -41,9 +41,6 @@ const login = [
         type: "input",
         name: "login",
         message: "Bitte geben Sie Benutzernamen und Passwort ein.",
-        when(answers: any) {
-            return answers.loginOrSearch == "Anmelden";
-        },
     },
 ];
 
@@ -56,9 +53,6 @@ const registration = [
         type: "input",
         name: "registration",
         message: "Bitte geben Sie Benutzernamen und Passwort ein.",
-        when(answers: any) {
-            return answers.loginOrSearch == "Registrieren";
-        },
     },
 ];
 
@@ -67,7 +61,7 @@ function registrationMenu() {
 }
 
 const search = [
-     {
+    {
         type: "checkbox",
         name: "driveTypeElectric",
         message: "Wählen Sie die gewünschte Antriebsart",
@@ -81,7 +75,7 @@ const search = [
             } else {
                 return "Mindestens eine Antriebsart auswählen!";
             }
-        },     
+        },
     },
     {
         type: "input",
@@ -93,12 +87,12 @@ const search = [
             } else {
                 return "Bitte geben Sie einen Suchbegriff ein!";
             }
-        },      
+        },
     },
     {
         type: "list",
         name: "filteredCars",
-        message: "Eine gefilterte Liste von allen Autos",
+        message: "Eine gefilterte Liste von allen Autos. Wählen Sie ein Auto aus.",
         choices(answers: any) {
             let listOfCars = CarManager.getInstance().ListOfAvailableCars();
             let choicesArray: any = [];
@@ -138,15 +132,52 @@ const showAllCars = [
             });
             return choicesArray;
         },
-        when(answers: any) {
-            return answers.loginOrSearch == "Alle Fahrzeuge anzeigen";
-        },
     },
 ];
 
-function showAllCarsMenu(){
+function showAllCarsMenu() {
     inquirer.prompt(showAllCars);
 }
+
+
+const bookCar = [
+    // Auto buchen
+    console.log("Auto buchen"),
+];
+
+function showbookCar(){
+    inquirer.prompt(bookCar);
+}
+
+const addCar = [
+    //Auto hinzufügen
+    console.log("Auto hinzufügen"),
+    
+];
+
+function addCarMenu(){
+    inquirer.prompt(addCar);
+}
+
+const averageCost = [
+    //ausgabe Durchschnittskosten aller Fahrten
+    console.log("Average Cost"),
+];
+
+function showAverageCost(){
+    inquirer.prompt(averageCost);
+}
+
+const allRides = [
+    //Alle Rides zeigen kommende und alte
+    console.log("Alle Fahrten"),
+];
+
+function showAllRides(){
+    inquirer.prompt(allRides);
+}
+
+
 
 mainMenu();
 //let testUser: User = new User();
