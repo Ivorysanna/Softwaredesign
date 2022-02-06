@@ -6,36 +6,87 @@
 "use strict";
 const inquirer = require("inquirer");
 
-const choices = Array.apply(0, new Array(26)).map((x, y) => String.fromCharCode(y + 65));
-choices.push("Multiline option 1\n  super cool feature \n  more lines");
-choices.push("Multiline option 2\n  super cool feature \n  more lines");
-choices.push("Multiline option 3\n  super cool feature \n  more lines");
-choices.push("Multiline option 4\n  super cool feature \n  more lines");
-choices.push("Multiline option 5\n  super cool feature \n  more lines");
-choices.push(new inquirer.Separator());
-choices.push("Multiline option \n  super cool feature");
-choices.push({
-    name: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.",
-    value: "foo",
-    short: "The long option",
-});
-
-inquirer
-    .prompt([
-        {
-            type: "list",
-            loop: false,
-            name: "letter",
-            message: "What's your favorite letter?",
-            choices,
-        },
-        {
-            type: "checkbox",
-            name: "name",
-            message: "Select the letter contained in your name:",
-            choices,
-        },
-    ])
-    .then((answers) => {
-        console.log(JSON.stringify(answers, null, "  "));
+const directionsPrompt = {
+    type: 'list',
+    name: 'direction',
+    message: 'Which direction would you like to go?',
+    choices: ['Forward', 'Right', 'Left', 'Back'],
+  };
+  
+  function main() {
+    console.log('You find youself in a small room, there is a door in front of you.');
+    exitHouse();
+  }
+  
+  function exitHouse() {
+    inquirer.prompt(directionsPrompt).then((answers) => {
+      if (answers.direction === 'Forward') {
+        console.log('You find yourself in a forest');
+        console.log(
+          'There is a wolf in front of you; a friendly looking dwarf to the right and an impasse to the left.'
+        );
+        encounter1();
+      } else {
+        console.log('You cannot go that way. Try again');
+        exitHouse();
+      }
     });
+  }
+  
+  function encounter1() {
+    inquirer.prompt(directionsPrompt).then((answers) => {
+      const { direction } = answers;
+      if (direction === 'Forward') {
+        console.log('You attempt to fight the wolf');
+        console.log(
+          'Theres a stick and some stones lying around you could use as a weapon'
+        );
+        encounter2b();
+      } else if (direction === 'Right') {
+        console.log('You befriend the dwarf');
+        console.log('He helps you kill the wolf. You can now move forward');
+        encounter2a();
+      } else {
+        console.log('You cannot go that way');
+        encounter1();
+      }
+    });
+  }
+  
+  function encounter2a() {
+    inquirer.prompt(directionsPrompt).then((answers) => {
+      const { direction } = answers;
+      if (direction === 'Forward') {
+        let output = 'You find a painted wooden sign that says:';
+        output += ' \n';
+        output += ' ____  _____  ____  _____ \n';
+        output += '(_  _)(  _  )(  _ \\(  _  ) \n';
+        output += '  )(   )(_)(  )(_) ))(_)(  \n';
+        output += ' (__) (_____)(____/(_____) \n';
+        console.log(output);
+      } else {
+        console.log('You cannot go that way');
+        encounter2a();
+      }
+    });
+  }
+  
+  function encounter2b() {
+    inquirer
+      .prompt({
+        type: 'list',
+        name: 'weapon',
+        message: 'Pick one',
+        choices: [
+          'Use the stick',
+          'Grab a large rock',
+          'Try and make a run for it',
+          'Attack the wolf unarmed',
+        ],
+      })
+      .then(() => {
+        console.log('The wolf mauls you. You die. The end.');
+      });
+  }
+  
+  main();

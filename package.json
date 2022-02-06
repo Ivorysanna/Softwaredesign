@@ -20,6 +20,7 @@
     "scripts": {
         "start": "node ./bin/index.js",
         "watch": "nodemon --no-stdin ./src/index.ts",
+        "debug": "nodemon --inspect --no-stdin ./src/index.ts",
         "build": "tsc",
         "prettier": "npx prettier --write ."
     },

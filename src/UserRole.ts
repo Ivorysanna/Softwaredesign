@@ -1,3 +1,3 @@
 export class UserRole {
-    public user_ID: number;
+    // public user_ID: number;
 }
