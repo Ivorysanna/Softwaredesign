@@ -1,6 +1,7 @@
 [
     {
         "user_ID": 1234,
+        "isAdmin": true,
         "userName": "John",
         "lastName": "Snow",
         "password": "123"
@@ -8,6 +9,7 @@
 
     {
         "user_ID": 1235,
+        "isAdmin": false,
         "userName": "Kuro",
         "lastName": "Schmurro",
         "password": "futter"

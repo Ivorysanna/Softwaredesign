@@ -2,12 +2,14 @@ import * as fs from "fs";
 
 export class User {
     public user_ID: number;
+    public isAdmin: boolean;
     public userName: string;
     public lastName: string;
     public password: string;
 
-    constructor( user_ID: number, userName: string, lastName: string, password: string) {
+    constructor( user_ID: number, isAdmin: boolean,userName: string, lastName: string, password: string) {
         this.user_ID = user_ID;
+        this.isAdmin = isAdmin;
         this.userName = userName;
         this.lastName = lastName;
         this. password = password;
