@@ -4,7 +4,7 @@ import { CarManager } from "./CarManager";
 import { Car } from "./Car";
 
 let questionAnswers: any = {};
-
+//Main Menü 
 const mainMenuQuestions = [
     {
         type: "list",
@@ -30,12 +30,13 @@ function mainMenu() {
                 showAllCarsMenu();
                 break;
             default:
-                console.error("Wrong menu item provided");
+                console.error("Falschen Menüpunkt ausgewählt");
                 break;
         }
     });
 }
 
+//Anmeldung
 const login = [
     {
         type: "input",
@@ -46,8 +47,20 @@ const login = [
 
 function loginMenu() {
     inquirer.prompt(login);
+    switch (//wenn Anmeldung erfolgreich?){
+        case "Nach Autos suchen":
+            mainMenu();
+            break;
+        case "Durchschnittskosten anzeigen":
+            showAverageCost()
+            break;
+        case "Alle Fahrten anzeigen":
+            showAllRides();
+            break;
+    }
 }
 
+//Registrierung
 const registration = [
     {
         type: "input",
@@ -58,8 +71,14 @@ const registration = [
 
 function registrationMenu() {
     inquirer.prompt(registration);
+    if (//Registrierung erfolgreich){
+        loginMenu();
+    }else{
+        console.log("Anmeldung nicht erfolgreich, probieren Sie es nochmal");
+    }
 }
 
+//Suche mit Filtern
 const search = [
     {
         type: "checkbox",
@@ -115,6 +134,8 @@ function searchMenu() {
     inquirer.prompt(search);
 }
 
+//Liste von allen Autos anzeigen 
+//TODO: Fahrzeuge die vorhanden sind, andere ensprechend markieren
 const showAllCars = [
     {
         type: "list",
@@ -139,7 +160,7 @@ function showAllCarsMenu() {
     inquirer.prompt(showAllCars);
 }
 
-
+//Auto buchen
 const bookCar = [
     // Auto buchen
     console.log("Auto buchen"),
@@ -149,6 +170,7 @@ function showbookCar(){
     inquirer.prompt(bookCar);
 }
 
+//Auto hinzufügen
 const addCar = [
     //Auto hinzufügen
     console.log("Auto hinzufügen"),
@@ -159,6 +181,7 @@ function addCarMenu(){
     inquirer.prompt(addCar);
 }
 
+//Durchschnittskosten aller Fahrten
 const averageCost = [
     //ausgabe Durchschnittskosten aller Fahrten
     console.log("Average Cost"),
@@ -168,6 +191,7 @@ function showAverageCost(){
     inquirer.prompt(averageCost);
 }
 
+//Alle Fahrten anzeigen; vergangene Fahrten und gebuchte Fahrten
 const allRides = [
     //Alle Rides zeigen kommende und alte
     console.log("Alle Fahrten"),
