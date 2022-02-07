@@ -16,7 +16,6 @@ export class User {
     public pastBookedRides(): String {
         let allRides = fs.readFileSync("data/rides.json");
         let outputRides = JSON.parse(allRides.toString());
-        //console.log(outputRides);
         return "Bis jetzt wurden: " + outputRides + " gebucht.";
     }
 
