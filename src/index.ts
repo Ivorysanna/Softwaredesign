@@ -222,8 +222,45 @@ const addCar = [
     //Auto hinzufügen
     {
         type: "input",
-        name: "addCar",
-        message: "Geben Sie folgende Werte ein: description, electricDriveType, earliestUsageTime, latestUsageTime, maxUsageDurationMinutes, flatRatePrice, pricePerMin",
+        name: "carDescription",
+        message: "Geben Sie folgenden Wert ein: Marke",
+    },
+    {
+        type: "list",
+        name: "carElectricDriveType",
+        message: "Wählen Sie die Antriebsart",
+        choices: [
+            { name: "Elektronisch", value: true },
+            { name: "Konventionell", value: false },
+        ]
+    },
+    {
+        type: "input",
+        name: "carEarliestUsageTime",
+        message: "Geben Sie folgenden Wert ein: Früheste Nutzungsuhrzeit",
+    },
+    {
+        type: "input",
+        name: "carLatestUsageTime",
+        message: "Geben Sie folgenden Wert ein: Späteste Nutzungsuhrzeit",
+    },
+    {
+        type: "input",
+        name: "carMaxUsageDurationMinutes",
+        message: "Geben Sie folgenden Wert ein: Maximale Nutzungsdauer",
+    },
+    {
+        type: "input",
+        name: "carFlatRatePrice",
+        message: "Geben Sie folgenden Wert ein: Pauschaler Nutzungspreis",
+    },
+    {
+        type: "input",
+        name: "carPricePerMin",
+        message: "Geben Sie folgenden Wert ein: Preis pro Minute",
+        validate(value: any) {
+            return !isNaN(parseFloat(value));
+        },
     },
     
 ];
