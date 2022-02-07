@@ -20,7 +20,6 @@ export class CarManager {
         let carData = JSON.parse(rawData.toString());
         let carObjects: Car[] = [];
         carData.forEach((element: any) => {
-            //console.log(element);
             let newCar = new Car(
                 element.car_ID,
                 element.description,

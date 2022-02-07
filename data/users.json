@@ -2,16 +2,14 @@
     {
         "user_ID": 1234,
         "isAdmin": true,
-        "userName": "John",
-        "lastName": "Snow",
+        "username": "John",
         "password": "123"
     },
 
     {
         "user_ID": 1235,
         "isAdmin": false,
-        "userName": "Kuro",
-        "lastName": "Schmurro",
+        "username": "Kuro",
         "password": "futter"
     }
 ]
