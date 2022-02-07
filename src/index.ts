@@ -4,6 +4,8 @@ import { CarManager } from "./CarManager";
 import { Car } from "./Car";
 import { UserManager } from "./UserManager";
 import { Console } from "console";
+import { DateTime } from "luxon";
+import { Utils } from "./Utils";
 
 let questionAnswers: any = {};
 let lastSelectedCar_ID: number;
@@ -111,7 +113,7 @@ function registrationMenu() {
     inquirer.prompt(registration).then((answers) => {
      if (UserManager.getInstance().registerUser(answers.registrationUsername, answers.registrationPassword)){
             console.log("Registrierung erfolgreich. Sie werden weitergeleitet")
-            loginMenu();
+            loggedinCustomerMenu();
         }else{
           console.log("Registrierung nicht erfolgreich, probieren Sie es nochmal");
           mainMenu();
@@ -154,7 +156,7 @@ const search = [
         name: "filteredCars",
         message: "Eine gefilterte Liste von allen Autos. Wählen Sie ein Auto aus.",
         choices(answers: any) {
-            let listOfCars = CarManager.getInstance().ListOfAvailableCars();
+            let listOfCars = CarManager.getInstance().listOfAvailableCars();
             let choicesArray: any = [];
             let regExp = new RegExp(answers.searchBrand, "i");
             listOfCars.forEach((eachCar: Car) => {
@@ -186,7 +188,7 @@ const showAllCarsQuestion = [
         message: "Eine Liste von allen Autos",
         choices(answers: any) {
             console.log(answers.driveTypeElectric);
-            let listOfCars = CarManager.getInstance().ListOfAvailableCars();
+            let listOfCars = CarManager.getInstance().listOfAvailableCars();
             let choicesArray: any = [];
             listOfCars.forEach((eachCar: Car) => {
                 choicesArray.push({
@@ -202,17 +204,29 @@ const showAllCarsQuestion = [
 function showAllCarsMenu(){
     inquirer.prompt(showAllCarsQuestion).then((answers) => {
         lastSelectedCar_ID = answers.showAllCars;
+        showBookCar();
     });
 }
 
 //Auto buchen
 const bookCar = [
-    // Auto buchen
     {
-        type: "list",
-        name: "bookCar",
-        message: "Auto wird gebucht IDK??",
-        choices: ["Leer"],
+        type: "input",
+        name: "bookCarDate",
+        message: "Geben Sie ein Datum und eine Zeit ein (z.b. Format 31.01.2022 14:00)",
+        validate(value: any){
+            const dateTime = Utils.parseDateTimeString(value);
+            return dateTime.isValid;
+        },
+    },
+    {
+        type: "input",
+        name: "bookCarDuration",
+        message: "Geben Sie die Dauer in Minuten an",
+        validate(value: any) {
+            return !isNaN(parseInt(value));
+        },
+
     },
 ];
 
@@ -253,11 +267,17 @@ const addCar = [
         type: "input",
         name: "carMaxUsageDurationMinutes",
         message: "Geben Sie folgenden Wert ein: Maximale Nutzungsdauer",
+        validate(value: any) {
+            return !isNaN(parseInt(value));
+        },
     },
     {
         type: "input",
         name: "carFlatRatePrice",
         message: "Geben Sie folgenden Wert ein: Pauschaler Nutzungspreis",
+        validate(value: any) {
+            return !isNaN(parseFloat(value));
+        },
     },
     {
         type: "input",
@@ -282,7 +302,12 @@ function showAverageCost(){
 
 //Alle Fahrten anzeigen; vergangene Fahrten und gebuchte Fahrten
 function showAllRides(){
-    console.log("Alle Fahrten");
+    let loggedinUser = UserManager.getInstance().getCurrentlyLoggedInUser();
+    let allRides = 
+    if(loggedinUser){
+
+        console.log();
+    }
 }
 
 
