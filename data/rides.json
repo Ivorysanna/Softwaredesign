@@ -1,15 +1,27 @@
 [
     {
         "user_ID": 1234,
-        "timestamp": "02.02.2022T14:00",
+        "timestamp": "02.02.2022 14:00",
         "duration": 40,
-        "car_ID": 2345
+        "car_ID": 2345,
+        "flatRatePrice": 20,
+        "pricePerMinute": 0.5
     },
 
     {
         "user_ID": 1235,
-        "timestamp": "03.02.2022T15:00",
+        "timestamp": "03.02.2022 15:00",
         "duration": 60,
-        "car_ID": 2345
+        "car_ID": 2345,
+        "flatRatePrice": 20,
+        "pricePerMinute": 0.5
+    },
+    {
+        "user_ID": 1236,
+        "timestamp": "04.02.2022 15:00",
+        "duration": 60,
+        "car_ID": 2346,
+        "flatRatePrice": 40,
+        "pricePerMinute": 0.8
     }
 ]
