@@ -15,7 +15,7 @@ export class CarManager {
 
         return CarManager.instance;
     }
-    public ListOfAvailableCars(): Car[] {
+    public listOfAvailableCars(): Car[] {
         let rawData = fs.readFileSync("data/cars.json");
         let carData = JSON.parse(rawData.toString());
         let carObjects: Car[] = [];
@@ -36,9 +36,47 @@ export class CarManager {
         return carObjects;
     }
 
-    // public addNewCar(): Car[] {
-    //     return null;
-    // }
+    public getCarByID(idToSearch: number): Car | undefined {
+        const userList: Car[] = this.listOfAvailableCars();
+        return userList.find((eachCar) => eachCar.car_ID == idToSearch);
+    }
+
+    public addNewCar(
+        description: string,
+        electricDriveType: boolean,
+        earliestUsageTime: DateTime,
+        latestUsageTime: DateTime,
+        maxUsageDurationMinutes: number,
+        flatRatePrice: number,
+        pricePerMin: number
+    ): boolean {
+        const carsList: Cars[] = this.listOfAvailableCars();
+
+        let newCarID: number = 1;
+        while (
+            carsList.some((eachCar) => {
+                eachCar.car_ID == newCarID;
+            })
+        ) {
+            newCarID++;
+        }
+
+        const newCar = new Car(
+            newCarID,
+            description,
+            electricDriveType,
+            earliestUsageTime,
+            latestUsageTime,
+            maxUsageDurationMinutes,
+            flatRatePrice,
+            pricePerMin
+        );
+        carsList.push(newCar);
+
+        fs.writeFileSync("data/users.json", JSON.stringify(carsList));
+
+        return true;
+    }
 
     // public searchCar(): Car[] {
     //     return null;

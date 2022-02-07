@@ -56,6 +56,12 @@ export class UserManager {
         return userList.find((eachUser) => eachUser.username == username);
     }
 
+    public getUserByID(idToSearch: number): User | undefined {
+        const userList: User[] = this.listOfAvailableUsers();
+
+        return userList.find((eachUser) => eachUser.user_ID == idToSearch);
+    }
+
     public registerUser(username: string, password: string): boolean {
         const userList: User[] = this.listOfAvailableUsers();
 

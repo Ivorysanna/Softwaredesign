@@ -1,14 +1,14 @@
 [
     {
         "user_ID": 1234,
-        "timestamp": "02.02.2022T14:00:00",
+        "timestamp": "02.02.2022T14:00",
         "duration": 40,
         "car_ID": 2345
     },
 
     {
         "user_ID": 1235,
-        "timestamp": "03.02.2022T15:00:00",
+        "timestamp": "03.02.2022T15:00",
         "duration": 60,
         "car_ID": 2345
     }
