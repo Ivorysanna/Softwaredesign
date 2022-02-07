@@ -47,17 +47,32 @@ const login = [
 
 function loginMenu() {
     inquirer.prompt(login);
-    switch (//wenn Anmeldung erfolgreich?){
-        case "Nach Autos suchen":
-            mainMenu();
-            break;
-        case "Durchschnittskosten anzeigen":
-            showAverageCost()
-            break;
-        case "Alle Fahrten anzeigen":
-            showAllRides();
-            break;
-    }
+}
+
+//Menu für angemeldete Kunden
+const logedinCustomer = [
+    {
+        type: "input",
+        name: "logedinCustomer",
+        message: "Wie möchten Sie weiter fortfahren?",
+        choices: ["Nach Autos suchen", "Durchschnittskosten anzeigen", "Alle Fahrten anzeigen"],
+    },
+];
+
+function logedinCustomerMenu() {
+    inquirer.prompt(mainMenuQuestions).then((answers) => {
+        switch (answers.logedinCustomer){
+            case "Nach Autos suchen":
+                mainMenu();
+                break;
+            case "Durchschnittskosten anzeigen":
+                showAverageCost()
+                break;
+            case "Alle Fahrten anzeigen":
+                showAllRides();
+                break;
+        }
+    });
 }
 
 //Registrierung
@@ -71,10 +86,10 @@ const registration = [
 
 function registrationMenu() {
     inquirer.prompt(registration);
-    if (//Registrierung erfolgreich){
+    if (/*Registrierung erfolgreich*/ ){
         loginMenu();
     }else{
-        console.log("Anmeldung nicht erfolgreich, probieren Sie es nochmal");
+        console.log("Registrierung nicht erfolgreich, probieren Sie es nochmal");
     }
 }
 
