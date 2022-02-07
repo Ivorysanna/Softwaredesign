@@ -6,6 +6,7 @@ import { UserManager } from "./UserManager";
 import { Console } from "console";
 
 let questionAnswers: any = {};
+let lastSelectedCar_ID: number;
 //Main Menü 
 const mainMenuQuestions = [
     {
@@ -171,12 +172,14 @@ const search = [
 ];
 
 function searchMenu() {
-    inquirer.prompt(search);
+    inquirer.prompt(search).then((answers) => {
+        console.log(answers);
+    });
 }
 
 //Liste von allen Autos anzeigen 
 //TODO: Fahrzeuge die vorhanden sind, andere ensprechend markieren
-const showAllCars = [
+const showAllCarsQuestion = [
     {
         type: "list",
         name: "showAllCars",
@@ -196,8 +199,10 @@ const showAllCars = [
     },
 ];
 
-function showAllCarsMenu() {
-    inquirer.prompt(showAllCars);
+function showAllCarsMenu(){
+    inquirer.prompt(showAllCarsQuestion).then((answers) => {
+        lastSelectedCar_ID = answers.showAllCars;
+    });
 }
 
 //Auto buchen
@@ -211,7 +216,7 @@ const bookCar = [
     },
 ];
 
-function showbookCar(){
+function showBookCar(){
     inquirer.prompt(bookCar).then((answers) => {
 
     });
