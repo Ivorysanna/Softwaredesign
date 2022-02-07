@@ -2,6 +2,8 @@ import { User } from "./User";
 import * as inquirer from "inquirer";
 import { CarManager } from "./CarManager";
 import { Car } from "./Car";
+import { UserManager } from "./UserManager";
+import { Console } from "console";
 
 let questionAnswers: any = {};
 //Main Menü 
@@ -40,33 +42,48 @@ function mainMenu() {
 const login = [
     {
         type: "input",
-        name: "login",
-        message: "Bitte geben Sie Benutzernamen und Passwort ein.",
+        name: "loginUsername",
+        message: "Bitte geben Sie Ihren Benutzernamen ein.",
     },
+    {
+        type: "password",
+        name: "loginPassword",
+        message: "Bitte geben Sie Ihr Passwort ein.",
+    },
+    
 ];
 
 function loginMenu() {
-    inquirer.prompt(login);
+    inquirer.prompt(login).then((answers) => {
+        let userLoggedIn = UserManager.getInstance().loginUser(answers.loginUsername, answers.loginPassword);
+        if (userLoggedIn){
+            console.log("Anmeldung erfolgreich!");
+            loggedinCustomerMenu();
+        }else{
+            console.log("Anmeldung fehlgeschlagen.");
+            mainMenu();
+        }
+    });
 }
 
 //Menu für angemeldete Kunden
-const logedinCustomer = [
+const loggedinCustomerQuestions = [
     {
-        type: "input",
-        name: "logedinCustomer",
+        type: "list",
+        name: "loggedinCustomer",
         message: "Wie möchten Sie weiter fortfahren?",
         choices: ["Nach Autos suchen", "Durchschnittskosten anzeigen", "Alle Fahrten anzeigen"],
     },
 ];
 
-function logedinCustomerMenu() {
-    inquirer.prompt(mainMenuQuestions).then((answers) => {
-        switch (answers.logedinCustomer){
+function loggedinCustomerMenu() {
+    inquirer.prompt(loggedinCustomerQuestions).then((answers) => {
+        switch (answers.loggedinCustomer){
             case "Nach Autos suchen":
                 mainMenu();
                 break;
             case "Durchschnittskosten anzeigen":
-                showAverageCost()
+                showAverageCost();
                 break;
             case "Alle Fahrten anzeigen":
                 showAllRides();
@@ -79,18 +96,26 @@ function logedinCustomerMenu() {
 const registration = [
     {
         type: "input",
-        name: "registration",
-        message: "Bitte geben Sie Benutzernamen und Passwort ein.",
+        name: "registrationUsername",
+        message: "Bitte geben Sie Ihren Benutzernamen ein.",
+    },
+    {
+        type: "password",
+        name: "registrationPassword",
+        message: "Bitte geben Sie Ihr Passwort ein.",
     },
 ];
 
 function registrationMenu() {
-    inquirer.prompt(registration);
-    if (/*Registrierung erfolgreich*/ ){
-        loginMenu();
-    }else{
-        console.log("Registrierung nicht erfolgreich, probieren Sie es nochmal");
-    }
+    inquirer.prompt(registration).then((answers) => {
+     if (UserManager.getInstance().registerUser(answers.registrationUsername, answers.registrationPassword)){
+            console.log("Registrierung erfolgreich. Sie werden weitergeleitet")
+            loginMenu();
+        }else{
+          console.log("Registrierung nicht erfolgreich, probieren Sie es nochmal");
+          mainMenu();
+        }
+    });
 }
 
 //Suche mit Filtern
@@ -178,17 +203,28 @@ function showAllCarsMenu() {
 //Auto buchen
 const bookCar = [
     // Auto buchen
-    console.log("Auto buchen"),
+    {
+        type: "list",
+        name: "bookCar",
+        message: "Auto wird gebucht IDK??",
+        choices: ["Leer"],
+    },
 ];
 
 function showbookCar(){
-    inquirer.prompt(bookCar);
+    inquirer.prompt(bookCar).then((answers) => {
+
+    });
 }
 
 //Auto hinzufügen
 const addCar = [
     //Auto hinzufügen
-    console.log("Auto hinzufügen"),
+    {
+        type: "input",
+        name: "addCar",
+        message: "Geben Sie folgende Werte ein: description, electricDriveType, earliestUsageTime, latestUsageTime, maxUsageDurationMinutes, flatRatePrice, pricePerMin",
+    },
     
 ];
 
@@ -197,23 +233,14 @@ function addCarMenu(){
 }
 
 //Durchschnittskosten aller Fahrten
-const averageCost = [
-    //ausgabe Durchschnittskosten aller Fahrten
-    console.log("Average Cost"),
-];
-
 function showAverageCost(){
-    inquirer.prompt(averageCost);
+    console.log("Durchschnittskosten aller Fahrten");
+
 }
 
 //Alle Fahrten anzeigen; vergangene Fahrten und gebuchte Fahrten
-const allRides = [
-    //Alle Rides zeigen kommende und alte
-    console.log("Alle Fahrten"),
-];
-
 function showAllRides(){
-    inquirer.prompt(allRides);
+    console.log("Alle Fahrten");
 }
 
 
