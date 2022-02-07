@@ -2,6 +2,9 @@ import * as fs from "fs";
 import { User } from "./User";
 
 export class UserManager {
+    // Singleton data
+    private currentlyLoggedInUser?: User = undefined;
+
     //Singleton für einfachen Zugriff auf UserManager
     private static instance: UserManager;
 
@@ -14,37 +17,68 @@ export class UserManager {
 
         return UserManager.instance;
     }
-    public ListOfAvailableUsers(): User[] {
+    public listOfAvailableUsers(): User[] {
         let rawData = fs.readFileSync("data/users.json");
-        let carData = JSON.parse(rawData.toString());
+        let userData = JSON.parse(rawData.toString());
         let userObjects: User[] = [];
-        carData.forEach((element: any) => {
-            //console.log(element);
-            // let newUser = new Car(
-            //     element.car_ID,
-            //     element.description,
-            //     element.electricDriveType,
-            //     DateTime.fromISO("2000-01-01T" + element.earliestUsageTime),
-            //     DateTime.fromISO("2000-01-01T" + element.latestUsageTime),
-            //     element.maxUsageDurationMinutes,
-            //     element.flatRatePrice,
-            //     element.pricePerMin
-            // );
-            // userObjects.push(newUser);
+        userData.forEach((element: any) => {
+            let newUser = new User(
+                element.user_ID,
+                element.isAdmin,
+                element.username,
+                element.password
+            );
+            userObjects.push(newUser);
         });
-        //console.log(carObjects);
         return userObjects;
     }
 
-    // public addNewUser(username: string, password: string) {}
+    // TODO
+    public loginUser(username: string, password: string): boolean {
+        const userToLogin = this.getUserByName(username);
 
-    // public loginUser(username: string, password: string): boolean {
-    //     return true;
-    // }
+        if (!userToLogin) {
+            return false;
+        }
 
-    // public registerUser(username: string, password: string): boolean {
-    //     return true;
-    // }
+        const loginSuccessful: boolean = userToLogin.password == password;
 
-    // public logoutUser() {}
+        if (loginSuccessful) {
+            this.currentlyLoggedInUser = userToLogin;
+        }
+
+        return loginSuccessful;
+    }
+
+    public getUserByName(username: string): User | undefined {
+        const userList: User[] = this.listOfAvailableUsers();
+
+        return userList.find((eachUser) => eachUser.username == username);
+    }
+
+    public registerUser(username: string, password: string): boolean {
+        const userList: User[] = this.listOfAvailableUsers();
+
+        let newUserID: number = 1;
+        while (
+            userList.some((eachUser) => {
+                eachUser.user_ID == newUserID;
+            })
+        ) {
+            newUserID++;
+        }
+
+        const newUser = new User(newUserID, false, username, password);
+        userList.push(newUser);
+
+        fs.writeFileSync("data/users.json", JSON.stringify(userList));
+
+        this.currentlyLoggedInUser = newUser;
+
+        return true;
+    }
+
+    public getCurrentlyLoggedInUser(): User | undefined {
+        return this.currentlyLoggedInUser;
+    }
 }
