@@ -24,9 +24,9 @@ export class RideManager {
         rideData.forEach((element: any) => {
             let newRide = new Ride(
                 Utils.parseDateTimeString(element.timestamp),
-                element.duration,
-                element.user,
-                element.bookedCar,
+                Duration.fromObject({ minutes: element.duration }),
+                user,
+                car,
                 element.flatRatePrice,
                 element.pricePerMinute
             );
