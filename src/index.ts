@@ -6,6 +6,7 @@ import { UserManager } from "./UserManager";
 import { Console } from "console";
 import { DateTime } from "luxon";
 import { Utils } from "./Utils";
+import { RideManager } from "./RideManager";
 
 let questionAnswers: any = {};
 let lastSelectedCar_ID: number;
@@ -303,10 +304,12 @@ function showAverageCost(){
 //Alle Fahrten anzeigen; vergangene Fahrten und gebuchte Fahrten
 function showAllRides(){
     let loggedinUser = UserManager.getInstance().getCurrentlyLoggedInUser();
-    let allRides = 
     if(loggedinUser){
-
-        console.log();
+        let allRides = RideManager.getInstance().getRidesForUser(loggedinUser);
+        
+        allRides.forEach(eachRide => {
+            console.log(eachRide.printString());
+        });
     }
 }
 

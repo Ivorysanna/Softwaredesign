@@ -48,7 +48,6 @@ export class Car {
         for (let i = 0; i < allCars.length; i++) {
             logAllCars += allCars[i].description;
         }
-        //console.log(logAllCars);
         return this.description;
     }
 }

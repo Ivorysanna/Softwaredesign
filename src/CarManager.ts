@@ -32,7 +32,6 @@ export class CarManager {
             );
             carObjects.push(newCar);
         });
-        //console.log(carObjects);
         return carObjects;
     }
 
@@ -50,7 +49,7 @@ export class CarManager {
         flatRatePrice: number,
         pricePerMin: number
     ): boolean {
-        const carsList: Cars[] = this.listOfAvailableCars();
+        const carsList: Car[] = this.listOfAvailableCars();
 
         let newCarID: number = 1;
         while (
