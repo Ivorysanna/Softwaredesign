@@ -1,13 +1,11 @@
-import { User } from "./User";
 import * as inquirer from "inquirer";
 inquirer.registerPrompt("date", require("inquirer-date-prompt"));
 import { CarManager } from "./CarManager";
 import { Car } from "./Car";
 import { UserManager } from "./UserManager";
-import { Console } from "console";
-import { DateTime } from "luxon";
 import { Utils } from "./Utils";
 import { RideManager } from "./RideManager";
+import { DateTime } from "luxon";
 
 let questionAnswers: any = {};
 let lastSelectedCar_ID: number;
@@ -89,7 +87,7 @@ const loggedinCustomerQuestions = [
             let choicesArray = [
                 "Suchen...",
                 "Alle Autos anzeigen",
-                "Durchschnittskosten anzeigen",
+                "Alle Kosten und Durchschnittskosten anzeigen",
                 "Alle Fahrten anzeigen",
             ];
             if (UserManager.getInstance().getCurrentlyLoggedInUser()?.isAdmin) {
@@ -109,7 +107,7 @@ function loggedinCustomerMenu() {
             case "Alle Autos anzeigen":
                 showAllCarsMenu();
                 break;
-            case "Durchschnittskosten anzeigen":
+            case "Alle Kosten und Durchschnittskosten anzeigen":
                 showAverageCost();
                 break;
             case "Auto hinzufügen":
@@ -199,12 +197,31 @@ const search = [
             });
             return choicesArray;
         },
+        when(answers: any) {
+            let listOfCars = CarManager.getInstance().listOfAvailableCars();
+            let regExp = new RegExp(answers.searchBrand, "i");
+            return listOfCars.some((eachCar: Car) => {
+                let match = eachCar.description.match(regExp) != null;
+                if (answers.driveTypeElectric.includes(eachCar.electricDriveType) && match) {
+                    return true;
+                }
+                return false;
+            });
+        },
     },
 ];
 
 function searchMenu() {
     inquirer.prompt(search).then((answers) => {
-        console.log(answers);
+        //console.log(answers);
+
+        if (answers.filteredCars) {
+            lastSelectedCar_ID = answers.filteredCars;
+            showBookCar();
+        } else {
+            console.log("Keine Autos mit diesen Parametern gefunden");
+            searchMenu();
+        }
     });
 }
 
@@ -240,21 +257,52 @@ function showAllCarsMenu() {
 //Auto buchen
 const bookCar = [
     {
-        type: "input",
+        type: "date",
         name: "bookCarDate",
-        message: "Geben Sie ein Datum und eine Zeit ein (z.b. Format 31.01.2022 14:00)",
-        validate(value: any) {
-            const dateTime = Utils.parseDateTimeString(value);
-            return dateTime.isValid;
+        message: "Geben Sie ein Datum und eine Zeit ein.",
+        default: new Date(),
+        locale: "de-DE",
+        format: {},
+        clearable: false,
+        validate: (enteredDateTime: DateTime, answers: any) => {
+            let carToBook = CarManager.getInstance().getCarByID(lastSelectedCar_ID);
+            if (!carToBook) {
+                return false;
+            }
+
+            //Prüfungen, dass Nutzungszeiten innerhalb Auto Nutzungszeit liegt
+            return enteredDateTime >= DateTime.now() &&
+                (enteredDateTime.hour > carToBook.earliestUsageTime.hour ||
+                    (enteredDateTime.hour == carToBook.earliestUsageTime.hour &&
+                        enteredDateTime.minute >= carToBook.earliestUsageTime.minute)) &&
+                enteredDateTime.hour < carToBook.latestUsageTime.hour
+                ? true
+                : "Die Nutzungszeit darf nicht außerhalb der Nutzungszeit des Fahrzeugs liegen. Fahrt muss in der Zukunft sein (Datum)";
         },
+        filter: (value: Date) => DateTime.fromJSDate(value),
     },
     {
         type: "input",
         name: "bookCarDuration",
         message: "Geben Sie die Dauer in Minuten an",
-        validate(value: any) {
-            return !isNaN(parseInt(value));
+        validate: (value: any, answers: any) => {
+            // https://stackoverflow.com/a/7709819/3526350
+            // let diffMs = answers.carLatestUsageTime - answers.carEarliestUsageTime;
+            // let diffMins = Math.floor(diffMs / 60000);
+
+            let enteredValue = parseInt(value);
+
+            if (isNaN(enteredValue)) {
+                return "Keine Nummer eingegeben!";
+            } else {
+                // if (diffMins < enteredValue) {
+                // return "Dauer liegt außerhalb der Nutzungszeit!";
+                // } else {
+                return true;
+                // }
+            }
         },
+        filter: (value: any) => (isNaN(parseInt(value)) ? value : parseInt(value)),
     },
 ];
 
@@ -280,7 +328,7 @@ const addCar = [
         type: "date",
         name: "carEarliestUsageTime",
         message: "Geben Sie folgenden Wert ein: Früheste Nutzungsuhrzeit",
-        default: new Date("2000-01-01T10:00:00"),
+        default: new Date("2000-01-01T10:00:00.000+01:00"),
         locale: "de-DE",
         format: { day: undefined, month: undefined, year: undefined },
         clearable: false,
@@ -289,7 +337,7 @@ const addCar = [
         type: "date",
         name: "carLatestUsageTime",
         message: "Geben Sie folgenden Wert ein: Späteste Nutzungsuhrzeit",
-        default: new Date("2000-01-01T20:00:00"),
+        default: new Date("2000-01-01T20:00:00.000+01:00"),
         locale: "de-DE",
         format: { day: undefined, month: undefined, year: undefined },
         clearable: false,
@@ -362,9 +410,11 @@ function addCarMenu() {
 function showAverageCost() {
     let averageCostUser = "Durchschnittskosten aller Fahrten: ";
     let currentUser = UserManager.getInstance().getCurrentlyLoggedInUser();
-    if(currentUser){
-        console.log(averageCostUser + currentUser.getAverageRideCostForUser() + " €");
-    }else{
+    let accumulatedCostUser = "Kumulierter Betrag aller Fahrten: ";
+    if (currentUser) {
+        console.log(accumulatedCostUser + currentUser.getSumRideCost() + " €");
+        console.log(averageCostUser + currentUser.getAverageRideCost() + " €");
+    } else {
         console.log("Kein User angemeldet!");
     }
     loggedinCustomerMenu();
