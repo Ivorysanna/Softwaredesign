@@ -20,7 +20,7 @@
         "pricePerMin": 0.8
     },
     {
-        "car_ID": 1,
+        "car_ID": 2,
         "description": "Volkswagen",
         "electricDriveType": false,
         "earliestUsageTime": "2000-01-01T13:00:00.000+01:00",
@@ -31,12 +31,12 @@
     },
     {
         "car_ID": 1,
-        "description": "Audi A8",
+        "description": "Basti B2",
         "electricDriveType": true,
-        "earliestUsageTime": "2000-01-01T09:00:00.000Z",
-        "latestUsageTime": "2000-01-01T13:00:00.000Z",
-        "maxUsageDurationMinutes": 90,
-        "flatRatePrice": 40,
+        "earliestUsageTime": "2000-01-01T10:00:00.000+01:00",
+        "latestUsageTime": "2000-01-01T14:00:00.000+01:00",
+        "maxUsageDurationMinutes": 40,
+        "flatRatePrice": 20,
         "pricePerMin": 1
     }
 ]

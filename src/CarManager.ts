@@ -24,8 +24,9 @@ export class CarManager {
                 element.car_ID,
                 element.description,
                 element.electricDriveType,
-                DateTime.fromISO(element.earliestUsageTime),
-                DateTime.fromISO(element.latestUsageTime),
+                //Zeitzone wird fix gesetzt, im Normalfall schwachsinn - Andere Lösung für Zeitzonen Problem nicht gefunden
+                DateTime.fromISO(element.earliestUsageTime).setZone("Europe/Berlin"),
+                DateTime.fromISO(element.latestUsageTime).setZone("Europe/Berlin"),
                 element.maxUsageDurationMinutes,
                 element.flatRatePrice,
                 element.pricePerMin
@@ -52,11 +53,7 @@ export class CarManager {
         const carsList: Car[] = this.listOfAvailableCars();
 
         let newCarID: number = 1;
-        while (
-            carsList.some((eachCar) => {
-                eachCar.car_ID == newCarID;
-            })
-        ) {
+        while (carsList.some((eachCar) => eachCar.car_ID == newCarID)) {
             newCarID++;
         }
 
@@ -64,8 +61,8 @@ export class CarManager {
             newCarID,
             description,
             electricDriveType,
-            earliestUsageTime,
-            latestUsageTime,
+            earliestUsageTime.setZone("Europe/Berlin"),
+            latestUsageTime.setZone("Europe/Berlin"),
             maxUsageDurationMinutes,
             flatRatePrice,
             pricePerMin
