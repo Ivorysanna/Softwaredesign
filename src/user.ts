@@ -1,4 +1,6 @@
 import * as fs from "fs";
+import { Ride } from "./Ride";
+import { RideManager } from "./RideManager";
 
 export class User {
     public user_ID: number;
@@ -35,7 +37,7 @@ export class User {
     public getAverageRideCost(): number {
         const rides: Ride[] = RideManager.getInstance().getRidesForUser(this);
 
-        return getSumRideCost() / rides.length;
+        return this.getSumRideCost() / rides.length;
     }
 
     public getSumRideCost() {
