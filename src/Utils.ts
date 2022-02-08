@@ -1,4 +1,4 @@
-import { DateTime } from "luxon";
+import { DateTime, Duration } from "luxon";
 
 export class Utils {
     private static readonly format = "dd.MM.yyyy hh:mm";

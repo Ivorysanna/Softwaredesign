@@ -65,6 +65,10 @@ export class UserManager {
     public registerUser(username: string, password: string): boolean {
         const userList: User[] = this.listOfAvailableUsers();
 
+        if (userList.some((eachUser) => eachUser.username == username)) {
+            return false;
+        }
+
         let newUserID: number = 1;
         while (
             userList.some((eachUser) => {

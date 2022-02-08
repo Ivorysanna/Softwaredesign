@@ -5,7 +5,8 @@ import { Car } from "./Car";
 import { UserManager } from "./UserManager";
 import { Utils } from "./Utils";
 import { RideManager } from "./RideManager";
-import { DateTime } from "luxon";
+import { DateTime, Duration } from "luxon";
+import { Ride } from "./Ride";
 
 let questionAnswers: any = {};
 let lastSelectedCar_ID: number;
@@ -275,7 +276,9 @@ const bookCar = [
                 (enteredDateTime.hour > carToBook.earliestUsageTime.hour ||
                     (enteredDateTime.hour == carToBook.earliestUsageTime.hour &&
                         enteredDateTime.minute >= carToBook.earliestUsageTime.minute)) &&
-                enteredDateTime.hour < carToBook.latestUsageTime.hour
+                (enteredDateTime.hour < carToBook.latestUsageTime.hour ||
+                    (enteredDateTime.hour == carToBook.latestUsageTime.hour &&
+                        enteredDateTime.minute < carToBook.latestUsageTime.minute))
                 ? true
                 : "Die Nutzungszeit darf nicht außerhalb der Nutzungszeit des Fahrzeugs liegen. Fahrt muss in der Zukunft sein (Datum)";
         },
@@ -285,21 +288,35 @@ const bookCar = [
         type: "input",
         name: "bookCarDuration",
         message: "Geben Sie die Dauer in Minuten an",
-        validate: (value: any, answers: any) => {
-            // https://stackoverflow.com/a/7709819/3526350
-            // let diffMs = answers.carLatestUsageTime - answers.carEarliestUsageTime;
-            // let diffMins = Math.floor(diffMs / 60000);
+        validate: (rawValue: any, answers: any) => {
+            let carToBook = CarManager.getInstance().getCarByID(lastSelectedCar_ID);
+            if (!carToBook) {
+                return false;
+            }
 
-            let enteredValue = parseInt(value);
+            let parsedValue = parseInt(rawValue);
 
-            if (isNaN(enteredValue)) {
+            if (isNaN(parsedValue)) {
                 return "Keine Nummer eingegeben!";
             } else {
-                // if (diffMins < enteredValue) {
-                // return "Dauer liegt außerhalb der Nutzungszeit!";
-                // } else {
+                if (carToBook.maxUsageDurationMinutes < parsedValue) {
+                    return "Dauer länger als maximale Nutzungsdauer des Fahrzeugs";
+                }
+
+                let bookingEndDateTime = answers.bookCarDate.plus(
+                    Duration.fromObject({ minutes: parsedValue })
+                );
+
+                if (
+                    !(
+                        bookingEndDateTime.hour < carToBook.latestUsageTime.hour ||
+                        (bookingEndDateTime.hour == carToBook.latestUsageTime.hour &&
+                            bookingEndDateTime.minute < carToBook.latestUsageTime.minute)
+                    )
+                ) {
+                    return "Länger als Nutzungszeit des Fahrzeugs";
+                }
                 return true;
-                // }
             }
         },
         filter: (value: any) => (isNaN(parseInt(value)) ? value : parseInt(value)),
@@ -307,7 +324,12 @@ const bookCar = [
 ];
 
 function showBookCar() {
-    inquirer.prompt(bookCar).then((answers) => {});
+    inquirer.prompt(bookCar).then((answers) => {
+
+        let rideDraft = new Ride(answers.bookCarDate, Duration.fromObject({ minutes: answers.bookCarDuration }), );
+
+        console.log(answers);
+    });
 }
 
 //Auto hinzufügen
@@ -328,16 +350,17 @@ const addCar = [
         type: "date",
         name: "carEarliestUsageTime",
         message: "Geben Sie folgenden Wert ein: Früheste Nutzungsuhrzeit",
-        default: new Date("2000-01-01T10:00:00.000+01:00"),
+        default: new Date("2000-01-01T10:00:00"),
         locale: "de-DE",
         format: { day: undefined, month: undefined, year: undefined },
         clearable: false,
+        filter: (value: Date) => DateTime.fromJSDate(value),
     },
     {
         type: "date",
         name: "carLatestUsageTime",
         message: "Geben Sie folgenden Wert ein: Späteste Nutzungsuhrzeit",
-        default: new Date("2000-01-01T20:00:00.000+01:00"),
+        default: new Date("2000-01-01T20:00:00"),
         locale: "de-DE",
         format: { day: undefined, month: undefined, year: undefined },
         clearable: false,
@@ -346,6 +369,7 @@ const addCar = [
             value > answers.carEarliestUsageTime
                 ? true
                 : "Die späteste Zeit muss nach der frühesten liegen",
+        filter: (value: Date) => DateTime.fromJSDate(value),
     },
     {
         type: "input",
