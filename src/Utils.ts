@@ -10,4 +10,9 @@ export class Utils {
     public static printFormattedDateTimeString(dateTime: DateTime) {
         return dateTime.toFormat(this.format);
     }
+
+    // Format: '14:00'
+    public static parseUsageTimeDateTimeString(timeString: string): DateTime {
+        return DateTime.fromISO("2000-01-01T" + timeString)
+    }
 }
