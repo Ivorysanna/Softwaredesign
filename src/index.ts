@@ -1,5 +1,6 @@
 import { User } from "./User";
 import * as inquirer from "inquirer";
+inquirer.registerPrompt("date", require("inquirer-date-prompt"));
 import { CarManager } from "./CarManager";
 import { Car } from "./Car";
 import { UserManager } from "./UserManager";
@@ -10,7 +11,13 @@ import { RideManager } from "./RideManager";
 
 let questionAnswers: any = {};
 let lastSelectedCar_ID: number;
-//Main Menü 
+
+const driveTypeQuestions = [
+    { name: "Elektronisch", value: true },
+    { name: "Konventionell", value: false },
+];
+
+//Main Menü
 const mainMenuQuestions = [
     {
         type: "list",
@@ -54,16 +61,18 @@ const login = [
         name: "loginPassword",
         message: "Bitte geben Sie Ihr Passwort ein.",
     },
-    
 ];
 
 function loginMenu() {
     inquirer.prompt(login).then((answers) => {
-        let userLoggedIn = UserManager.getInstance().loginUser(answers.loginUsername, answers.loginPassword);
-        if (userLoggedIn){
+        let userLoggedIn = UserManager.getInstance().loginUser(
+            answers.loginUsername,
+            answers.loginPassword
+        );
+        if (userLoggedIn) {
             console.log("Anmeldung erfolgreich!");
             loggedinCustomerMenu();
-        }else{
+        } else {
             console.log("Anmeldung fehlgeschlagen.");
             mainMenu();
         }
@@ -76,18 +85,35 @@ const loggedinCustomerQuestions = [
         type: "list",
         name: "loggedinCustomer",
         message: "Wie möchten Sie weiter fortfahren?",
-        choices: ["Nach Autos suchen", "Durchschnittskosten anzeigen", "Alle Fahrten anzeigen"],
+        choices() {
+            let choicesArray = [
+                "Suchen...",
+                "Alle Autos anzeigen",
+                "Durchschnittskosten anzeigen",
+                "Alle Fahrten anzeigen",
+            ];
+            if (UserManager.getInstance().getCurrentlyLoggedInUser()?.isAdmin) {
+                choicesArray.push("Auto hinzufügen");
+            }
+            return choicesArray;
+        },
     },
 ];
 
 function loggedinCustomerMenu() {
     inquirer.prompt(loggedinCustomerQuestions).then((answers) => {
-        switch (answers.loggedinCustomer){
-            case "Nach Autos suchen":
-                mainMenu();
+        switch (answers.loggedinCustomer) {
+            case "Suchen...":
+                searchMenu();
+                break;
+            case "Alle Autos anzeigen":
+                showAllCarsMenu();
                 break;
             case "Durchschnittskosten anzeigen":
                 showAverageCost();
+                break;
+            case "Auto hinzufügen":
+                addCarMenu();
                 break;
             case "Alle Fahrten anzeigen":
                 showAllRides();
@@ -112,12 +138,17 @@ const registration = [
 
 function registrationMenu() {
     inquirer.prompt(registration).then((answers) => {
-     if (UserManager.getInstance().registerUser(answers.registrationUsername, answers.registrationPassword)){
-            console.log("Registrierung erfolgreich. Sie werden weitergeleitet")
+        if (
+            UserManager.getInstance().registerUser(
+                answers.registrationUsername,
+                answers.registrationPassword
+            )
+        ) {
+            console.log("Registrierung erfolgreich. Sie werden weitergeleitet");
             loggedinCustomerMenu();
-        }else{
-          console.log("Registrierung nicht erfolgreich, probieren Sie es nochmal");
-          mainMenu();
+        } else {
+            console.log("Registrierung nicht erfolgreich, probieren Sie es nochmal");
+            mainMenu();
         }
     });
 }
@@ -128,10 +159,7 @@ const search = [
         type: "checkbox",
         name: "driveTypeElectric",
         message: "Wählen Sie die gewünschte Antriebsart",
-        choices: [
-            { name: "Elektronisch", value: true },
-            { name: "Konventionell", value: false },
-        ],
+        choices: driveTypeQuestions,
         validate(value: any) {
             if (value.length > 0) {
                 return true;
@@ -180,7 +208,7 @@ function searchMenu() {
     });
 }
 
-//Liste von allen Autos anzeigen 
+//Liste von allen Autos anzeigen
 //TODO: Fahrzeuge die vorhanden sind, andere ensprechend markieren
 const showAllCarsQuestion = [
     {
@@ -202,7 +230,7 @@ const showAllCarsQuestion = [
     },
 ];
 
-function showAllCarsMenu(){
+function showAllCarsMenu() {
     inquirer.prompt(showAllCarsQuestion).then((answers) => {
         lastSelectedCar_ID = answers.showAllCars;
         showBookCar();
@@ -215,7 +243,7 @@ const bookCar = [
         type: "input",
         name: "bookCarDate",
         message: "Geben Sie ein Datum und eine Zeit ein (z.b. Format 31.01.2022 14:00)",
-        validate(value: any){
+        validate(value: any) {
             const dateTime = Utils.parseDateTimeString(value);
             return dateTime.isValid;
         },
@@ -227,14 +255,11 @@ const bookCar = [
         validate(value: any) {
             return !isNaN(parseInt(value));
         },
-
     },
 ];
 
-function showBookCar(){
-    inquirer.prompt(bookCar).then((answers) => {
-
-    });
+function showBookCar() {
+    inquirer.prompt(bookCar).then((answers) => {});
 }
 
 //Auto hinzufügen
@@ -249,71 +274,114 @@ const addCar = [
         type: "list",
         name: "carElectricDriveType",
         message: "Wählen Sie die Antriebsart",
-        choices: [
-            { name: "Elektronisch", value: true },
-            { name: "Konventionell", value: false },
-        ]
+        choices: driveTypeQuestions,
     },
     {
-        type: "input",
+        type: "date",
         name: "carEarliestUsageTime",
         message: "Geben Sie folgenden Wert ein: Früheste Nutzungsuhrzeit",
+        default: new Date("2000-01-01T10:00:00"),
+        locale: "de-DE",
+        format: { day: undefined, month: undefined, year: undefined },
+        clearable: false,
     },
     {
-        type: "input",
+        type: "date",
         name: "carLatestUsageTime",
         message: "Geben Sie folgenden Wert ein: Späteste Nutzungsuhrzeit",
+        default: new Date("2000-01-01T20:00:00"),
+        locale: "de-DE",
+        format: { day: undefined, month: undefined, year: undefined },
+        clearable: false,
+
+        validate: (value: any, answers: any) =>
+            value > answers.carEarliestUsageTime
+                ? true
+                : "Die späteste Zeit muss nach der frühesten liegen",
     },
     {
         type: "input",
         name: "carMaxUsageDurationMinutes",
         message: "Geben Sie folgenden Wert ein: Maximale Nutzungsdauer",
-        validate(value: any) {
-            return !isNaN(parseInt(value));
+        default: 120,
+        validate: (value: any, answers: any) => {
+            // https://stackoverflow.com/a/7709819/3526350
+            let diffMs = answers.carLatestUsageTime - answers.carEarliestUsageTime;
+            let diffMins = Math.floor(diffMs / 60000);
+
+            let enteredValue = parseInt(value);
+
+            if (isNaN(enteredValue)) {
+                return "Keine Nummer eingegeben!";
+            } else {
+                if (diffMins < enteredValue) {
+                    return "Dauer liegt außerhalb der Nutzungszeit!";
+                } else {
+                    return true;
+                }
+            }
         },
+        filter: (value: any) => (isNaN(parseInt(value)) ? value : parseInt(value)),
     },
     {
         type: "input",
         name: "carFlatRatePrice",
         message: "Geben Sie folgenden Wert ein: Pauschaler Nutzungspreis",
-        validate(value: any) {
-            return !isNaN(parseFloat(value));
-        },
+        //https://github.com/SBoudrias/Inquirer.js/issues/866#issuecomment-626265477
+        validate: (value: any) => (isNaN(parseFloat(value)) ? "Not a number!" : true),
+        filter: (value: any) => (isNaN(parseFloat(value)) ? value : parseFloat(value)),
     },
     {
         type: "input",
         name: "carPricePerMin",
         message: "Geben Sie folgenden Wert ein: Preis pro Minute",
-        validate(value: any) {
-            return !isNaN(parseFloat(value));
-        },
+        validate: (value: any) => (isNaN(parseFloat(value)) ? "Not a number!" : true),
+        filter: (value: any) => (isNaN(parseFloat(value)) ? value : parseFloat(value)),
     },
-    
 ];
 
-function addCarMenu(){
-    inquirer.prompt(addCar);
+function addCarMenu() {
+    inquirer.prompt(addCar).then((answers) => {
+        console.log(answers);
+
+        CarManager.getInstance().addNewCar(
+            answers.carDescription,
+            answers.carElectricDriveType,
+            answers.carEarliestUsageTime,
+            answers.carLatestUsageTime,
+            answers.carMaxUsageDurationMinutes,
+            answers.carFlatRatePrice,
+            answers.carPricePerMin
+        );
+        console.log("Das Auto wurde hinzugefügt");
+        mainMenu();
+    });
 }
 
 //Durchschnittskosten aller Fahrten
-function showAverageCost(){
-    console.log("Durchschnittskosten aller Fahrten");
-
+function showAverageCost() {
+    let averageCostUser = "Durchschnittskosten aller Fahrten: ";
+    let currentUser = UserManager.getInstance().getCurrentlyLoggedInUser();
+    if(currentUser){
+        console.log(averageCostUser + currentUser.getAverageRideCostForUser() + " €");
+    }else{
+        console.log("Kein User angemeldet!");
+    }
+    loggedinCustomerMenu();
 }
 
 //Alle Fahrten anzeigen; vergangene Fahrten und gebuchte Fahrten
-function showAllRides(){
+function showAllRides() {
     let loggedinUser = UserManager.getInstance().getCurrentlyLoggedInUser();
-    if(loggedinUser){
+    if (loggedinUser) {
         let allRides = RideManager.getInstance().getRidesForUser(loggedinUser);
-        
-        allRides.forEach(eachRide => {
+
+        allRides.forEach((eachRide) => {
             console.log(eachRide.printString());
         });
     }
+    loggedinCustomerMenu();
 }
-
-
 
 mainMenu();
 //let testUser: User = new User();

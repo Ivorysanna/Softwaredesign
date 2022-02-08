@@ -31,14 +31,10 @@ export class Ride {
     //     return ;
     // }
 
-    public calculateCost(): number {
-        return 1;
-    }
-
-    public getFullPrice(): number | null {
+    public getFullPrice(): number {
         let car = CarManager.getInstance().getCarByID(this.bookedCar.car_ID);
         if (!car) {
-            return null;
+            return 0;
         }
 
 

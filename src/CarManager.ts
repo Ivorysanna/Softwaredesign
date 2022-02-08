@@ -24,8 +24,8 @@ export class CarManager {
                 element.car_ID,
                 element.description,
                 element.electricDriveType,
-                DateTime.fromISO("2000-01-01T" + element.earliestUsageTime),
-                DateTime.fromISO("2000-01-01T" + element.latestUsageTime),
+                DateTime.fromISO(element.earliestUsageTime),
+                DateTime.fromISO(element.latestUsageTime),
                 element.maxUsageDurationMinutes,
                 element.flatRatePrice,
                 element.pricePerMin
@@ -72,7 +72,7 @@ export class CarManager {
         );
         carsList.push(newCar);
 
-        fs.writeFileSync("data/users.json", JSON.stringify(carsList));
+        fs.writeFileSync("data/cars.json", JSON.stringify(carsList));
 
         return true;
     }

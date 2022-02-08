@@ -57,4 +57,5 @@ export class RideManager {
         const ridesList: Ride[] = this.listOfAvailableRides();
         return ridesList.filter((eachRide) => eachRide.user.user_ID == userToSearch.user_ID);
     }
+
 }
