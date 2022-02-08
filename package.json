@@ -5,6 +5,7 @@
     "main": "src/index.ts",
     "dependencies": {
         "inquirer": "^8.2.0",
+        "inquirer-date-prompt": "^2.0.1",
         "luxon": "^2.3.0",
         "nodemon": "^2.0.15",
         "ts-node": "^10.4.0",
