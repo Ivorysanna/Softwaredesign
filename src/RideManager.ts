@@ -40,8 +40,6 @@ export class RideManager {
                 Duration.fromObject({ minutes: element.duration }),
                 user,
                 car,
-                element.flatRatePrice,
-                element.pricePerMinute
             );
             rideObjects.push(newRide);
         });

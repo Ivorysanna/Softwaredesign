@@ -325,10 +325,15 @@ const bookCar = [
 
 function showBookCar() {
     inquirer.prompt(bookCar).then((answers) => {
+        let rideDraft = new Ride(
+            answers.bookCarDate,
+            Duration.fromObject({ minutes: answers.bookCarDuration }),
+            UserManager.getInstance().getCurrentlyLoggedInUser()!,
+            CarManager.getInstance().getCarByID(lastSelectedCar_ID)!
+        );
 
-        let rideDraft = new Ride(answers.bookCarDate, Duration.fromObject({ minutes: answers.bookCarDuration }), );
+        console.log("Gesamter Fahrtpreis: " + rideDraft.getFullPrice());
 
-        console.log(answers);
     });
 }
 
