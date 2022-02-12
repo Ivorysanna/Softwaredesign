@@ -153,7 +153,7 @@ function registrationMenu() {
 }
 
 //Suche mit Filtern
-const search = [
+const filterDriveTypeAndDescriptionQuestions = [
     {
         type: "checkbox",
         name: "driveTypeElectric",
@@ -179,77 +179,71 @@ const search = [
             }
         },
     },
-    {
-        type: "list",
-        name: "filteredCars",
-        message: "Eine gefilterte Liste von allen Autos. Wählen Sie ein Auto aus.",
-        choices(answers: any) {
-            let listOfCars = CarManager.getInstance().listOfAvailableCars();
-            let choicesArray: any = [];
-            let regExp = new RegExp(answers.searchBrand, "i");
-            listOfCars.forEach((eachCar: Car) => {
-                let match = eachCar.description.match(regExp) != null;
-                if (answers.driveTypeElectric.includes(eachCar.electricDriveType) && match) {
-                    choicesArray.push({
-                        name: eachCar.printString(),
-                        value: eachCar.car_ID,
-                    });
-                }
-            });
-            return choicesArray;
-        },
-        when(answers: any) {
-            let listOfCars = CarManager.getInstance().listOfAvailableCars();
-            let regExp = new RegExp(answers.searchBrand, "i");
-            return listOfCars.some((eachCar: Car) => {
-                let match = eachCar.description.match(regExp) != null;
-                if (answers.driveTypeElectric.includes(eachCar.electricDriveType) && match) {
-                    return true;
-                }
-                return false;
-            });
-        },
-    },
 ];
 
 function searchMenu() {
-    inquirer.prompt(search).then((answers) => {
-        //console.log(answers);
+    inquirer.prompt(filterDriveTypeAndDescriptionQuestions).then((answers) => {
+        filteredCarsList(answers.searchBrand, answers.driveTypeElectric);
+    });
+}
 
-        if (answers.filteredCars) {
-            lastSelectedCar_ID = answers.filteredCars;
-            showBookCar();
-        } else {
-            console.log("Keine Autos mit diesen Parametern gefunden");
-            searchMenu();
+function filteredCarsQuestion(carDescriptionSearchTerm: string, carDriveType: boolean[]): any {
+    let listOfCars = CarManager.getInstance().listOfAvailableCars();
+    let filteredCars: Car[] = [];
+    let regExp = new RegExp(carDescriptionSearchTerm, "i");
+    listOfCars.forEach((eachCar: Car) => {
+        let match = eachCar.description.match(regExp) != null;
+        if (carDriveType.includes(eachCar.electricDriveType) && match) {
+            filteredCars.push(eachCar);
         }
     });
+
+    return createShowCarsQuestionFromCarList(filteredCars);
+}
+
+function filteredCarsList(carDescriptionSearchTerm: string, carDriveType: boolean[]) {
+    inquirer
+        .prompt(filteredCarsQuestion(carDescriptionSearchTerm, carDriveType))
+        .then((answers) => {
+            if (answers.carChoice) {
+                lastSelectedCar_ID = answers.carChoice;
+                showBookCar();
+            } else {
+                console.log("Keine Autos mit diesen Parametern gefunden");
+                searchMenu();
+            }
+        });
 }
 
 //Liste von allen Autos anzeigen
 //TODO: Fahrzeuge die vorhanden sind, andere ensprechend markieren
-const showAllCarsQuestion = [
-    {
-        type: "list",
-        name: "showAllCars",
-        message: "Eine Liste von allen Autos",
-        choices(answers: any) {
-            console.log(answers.driveTypeElectric);
-            let listOfCars = CarManager.getInstance().listOfAvailableCars();
-            let choicesArray: any = [];
-            listOfCars.forEach((eachCar: Car) => {
-                choicesArray.push({
-                    name: eachCar.printString(),
-                    value: eachCar.car_ID,
+
+function createShowCarsQuestionFromCarList(carList: Car[]): any {
+    return [
+        {
+            type: "list",
+            name: "carChoice",
+            message: "Eine Liste von allen Autos",
+            choices(answers: any) {
+                let choicesArray: any = [];
+                carList.forEach((eachCar: Car) => {
+                    choicesArray.push({
+                        name: eachCar.printString(),
+                        value: eachCar.car_ID,
+                    });
                 });
-            });
-            return choicesArray;
+                return choicesArray;
+            },
+            when(answers: any) {
+                return carList.length > 0;
+            },
         },
-    },
-];
+    ];
+}
 
 function showAllCarsMenu() {
-    inquirer.prompt(showAllCarsQuestion).then((answers) => {
+    let listOfCars = CarManager.getInstance().listOfAvailableCars();
+    inquirer.prompt(createShowCarsQuestionFromCarList(listOfCars)).then((answers) => {
         lastSelectedCar_ID = answers.showAllCars;
         showBookCar();
     });
@@ -333,7 +327,6 @@ function showBookCar() {
         );
 
         console.log("Gesamter Fahrtpreis: " + rideDraft.getFullPrice());
-
     });
 }
 
