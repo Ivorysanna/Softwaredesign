@@ -48,5 +48,15 @@
         "maxUsageDurationMinutes": 60,
         "flatRatePrice": 10,
         "pricePerMin": 0.4
+    },
+    {
+        "car_ID": 4,
+        "description": "Mercedes ",
+        "electricDriveType": false,
+        "earliestUsageTime": "2000-01-01T08:00:00.000+01:00",
+        "latestUsageTime": "2000-01-01T19:00:00.000+01:00",
+        "maxUsageDurationMinutes": 200,
+        "flatRatePrice": 30,
+        "pricePerMin": 0.8
     }
 ]

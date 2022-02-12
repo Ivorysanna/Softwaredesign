@@ -41,9 +41,7 @@ export class Car {
             "HH:mm"
         )} Uhr, ${this.flatRatePrice} € Nutzungspreis ${this.pricePerMin} € pro Min.`;
     }
-    public getCarStatus(): boolean {
-        return true;
-    }
+    
     public getCarDescription(): string {
         let rawData = fs.readFileSync("data/cars.json");
         let allCars = JSON.parse(rawData.toString());
