@@ -17,16 +17,15 @@ const driveTypeQuestions = [
 ];
 
 //Main Menü
-const mainMenuQuestions = [
-    {
-        type: "list",
-        name: "loginOrSearch",
-        message: "Wollen Sie sich anmelden, oder nach Autos suchen?",
-        choices: ["Anmelden", "Registrieren", "Suchen...", "Alle Fahrzeuge anzeigen"],
-    },
-];
-
 function mainMenu() {
+    const mainMenuQuestions = [
+        {
+            type: "list",
+            name: "loginOrSearch",
+            message: "Wollen Sie sich anmelden, oder nach Autos suchen?",
+            choices: ["Anmelden", "Registrieren", "Suchen...", "Alle Fahrzeuge anzeigen"],
+        },
+    ];
     inquirer.prompt(mainMenuQuestions).then((answers) => {
         switch (answers.loginOrSearch) {
             case "Anmelden":
@@ -49,20 +48,19 @@ function mainMenu() {
 }
 
 //Anmeldung
-const login = [
-    {
-        type: "input",
-        name: "loginUsername",
-        message: "Bitte geben Sie Ihren Benutzernamen ein.",
-    },
-    {
-        type: "password",
-        name: "loginPassword",
-        message: "Bitte geben Sie Ihr Passwort ein.",
-    },
-];
-
 function loginMenu() {
+    const login = [
+        {
+            type: "input",
+            name: "loginUsername",
+            message: "Bitte geben Sie Ihren Benutzernamen ein.",
+        },
+        {
+            type: "password",
+            name: "loginPassword",
+            message: "Bitte geben Sie Ihr Passwort ein.",
+        },
+    ];
     inquirer.prompt(login).then((answers) => {
         let userLoggedIn = UserManager.getInstance().loginUser(
             answers.loginUsername,
@@ -79,27 +77,28 @@ function loginMenu() {
 }
 
 //Menu für angemeldete Kunden
-const loggedinCustomerQuestions = [
-    {
-        type: "list",
-        name: "loggedinCustomer",
-        message: "Wie möchten Sie weiter fortfahren?",
-        choices() {
-            let choicesArray = [
-                "Suchen...",
-                "Alle Autos anzeigen",
-                "Alle Kosten und Durchschnittskosten anzeigen",
-                "Alle Fahrten anzeigen",
-            ];
-            if (UserManager.getInstance().getCurrentlyLoggedInUser()?.isAdmin) {
-                choicesArray.push("Auto hinzufügen");
-            }
-            return choicesArray;
-        },
-    },
-];
 
 function loggedinCustomerMenu() {
+    const loggedinCustomerQuestions = [
+        {
+            type: "list",
+            name: "loggedinCustomer",
+            message: "Wie möchten Sie weiter fortfahren?",
+            choices() {
+                let choicesArray = [
+                    "Suchen...",
+                    "Alle Autos anzeigen",
+                    "Alle Kosten und Durchschnittskosten anzeigen",
+                    "Alle Fahrten anzeigen",
+                ];
+                if (UserManager.getInstance().getCurrentlyLoggedInUser()?.isAdmin) {
+                    choicesArray.push("Auto hinzufügen");
+                }
+                return choicesArray;
+            },
+        },
+    ];
+
     inquirer.prompt(loggedinCustomerQuestions).then((answers) => {
         switch (answers.loggedinCustomer) {
             case "Suchen...":
@@ -122,20 +121,19 @@ function loggedinCustomerMenu() {
 }
 
 //Registrierung
-const registration = [
-    {
-        type: "input",
-        name: "registrationUsername",
-        message: "Bitte geben Sie Ihren Benutzernamen ein.",
-    },
-    {
-        type: "password",
-        name: "registrationPassword",
-        message: "Bitte geben Sie Ihr Passwort ein.",
-    },
-];
-
 function registrationMenu() {
+    const registration = [
+        {
+            type: "input",
+            name: "registrationUsername",
+            message: "Bitte geben Sie Ihren Benutzernamen ein.",
+        },
+        {
+            type: "password",
+            name: "registrationPassword",
+            message: "Bitte geben Sie Ihr Passwort ein.",
+        },
+    ];
     inquirer.prompt(registration).then((answers) => {
         if (
             UserManager.getInstance().registerUser(
@@ -153,41 +151,40 @@ function registrationMenu() {
 }
 
 //Suche mit Filtern
-const filterDriveTypeAndDescriptionQuestions = [
-    {
-        type: "checkbox",
-        name: "driveTypeElectric",
-        message: "Wählen Sie die gewünschte Antriebsart",
-        choices: driveTypeQuestions,
-        validate(value: any) {
-            if (value.length > 0) {
-                return true;
-            } else {
-                return "Mindestens eine Antriebsart auswählen!";
-            }
-        },
-    },
-    {
-        type: "input",
-        name: "searchBrand",
-        message: "Geben Sie Ihre gewünschte Marke ein",
-        validate(value: any) {
-            if (value.length > 0) {
-                return true;
-            } else {
-                return "Bitte geben Sie einen Suchbegriff ein!";
-            }
-        },
-    },
-];
-
 function searchMenu() {
+    const filterDriveTypeAndDescriptionQuestions = [
+        {
+            type: "checkbox",
+            name: "driveTypeElectric",
+            message: "Wählen Sie die gewünschte Antriebsart",
+            choices: driveTypeQuestions,
+            validate(value: any) {
+                if (value.length > 0) {
+                    return true;
+                } else {
+                    return "Mindestens eine Antriebsart auswählen!";
+                }
+            },
+        },
+        {
+            type: "input",
+            name: "searchBrand",
+            message: "Geben Sie Ihre gewünschte Marke ein",
+            validate(value: any) {
+                if (value.length > 0) {
+                    return true;
+                } else {
+                    return "Bitte geben Sie einen Suchbegriff ein!";
+                }
+            },
+        },
+    ];
     inquirer.prompt(filterDriveTypeAndDescriptionQuestions).then((answers) => {
         filteredCarsList(answers.searchBrand, answers.driveTypeElectric);
     });
 }
 
-function filteredCarsQuestion(carDescriptionSearchTerm: string, carDriveType: boolean[]): any {
+function filteredCarsList(carDescriptionSearchTerm: string, carDriveType: boolean[]) {
     let listOfCars = CarManager.getInstance().listOfAvailableCars();
     let filteredCars: Car[] = [];
     let regExp = new RegExp(carDescriptionSearchTerm, "i");
@@ -198,21 +195,15 @@ function filteredCarsQuestion(carDescriptionSearchTerm: string, carDriveType: bo
         }
     });
 
-    return createShowCarsQuestionFromCarList(filteredCars);
-}
-
-function filteredCarsList(carDescriptionSearchTerm: string, carDriveType: boolean[]) {
-    inquirer
-        .prompt(filteredCarsQuestion(carDescriptionSearchTerm, carDriveType))
-        .then((answers) => {
-            if (answers.carChoice) {
-                lastSelectedCar_ID = answers.carChoice;
-                showBookCar();
-            } else {
-                console.log("Keine Autos mit diesen Parametern gefunden");
-                searchMenu();
-            }
-        });
+    inquirer.prompt(createShowCarsQuestionFromCarList(filteredCars)).then((answers) => {
+        if (answers.carChoice) {
+            lastSelectedCar_ID = answers.carChoice;
+            showBookCar();
+        } else {
+            console.log("Keine Autos mit diesen Parametern gefunden");
+            searchMenu();
+        }
+    });
 }
 
 //Liste von allen Autos anzeigen
@@ -244,80 +235,101 @@ function createShowCarsQuestionFromCarList(carList: Car[]): any {
 function showAllCarsMenu() {
     let listOfCars = CarManager.getInstance().listOfAvailableCars();
     inquirer.prompt(createShowCarsQuestionFromCarList(listOfCars)).then((answers) => {
-        lastSelectedCar_ID = answers.showAllCars;
+        if (!UserManager.getInstance().isLoggedInUser()) {
+            console.log("Sie sind nicht angemeldet, bitte melden Sie sich erst an!");
+            mainMenu();
+        }
+
+        lastSelectedCar_ID = answers.carChoice;
         showBookCar();
     });
 }
 
 //Auto buchen
-const bookCar = [
-    {
-        type: "date",
-        name: "bookCarDate",
-        message: "Geben Sie ein Datum und eine Zeit ein.",
-        default: new Date(),
-        locale: "de-DE",
-        format: {},
-        clearable: false,
-        validate: (enteredDateTime: DateTime, answers: any) => {
-            let carToBook = CarManager.getInstance().getCarByID(lastSelectedCar_ID);
-            if (!carToBook) {
-                return false;
-            }
-
-            //Prüfungen, dass Nutzungszeiten innerhalb Auto Nutzungszeit liegt
-            return enteredDateTime >= DateTime.now() &&
-                (enteredDateTime.hour > carToBook.earliestUsageTime.hour ||
-                    (enteredDateTime.hour == carToBook.earliestUsageTime.hour &&
-                        enteredDateTime.minute >= carToBook.earliestUsageTime.minute)) &&
-                (enteredDateTime.hour < carToBook.latestUsageTime.hour ||
-                    (enteredDateTime.hour == carToBook.latestUsageTime.hour &&
-                        enteredDateTime.minute < carToBook.latestUsageTime.minute))
-                ? true
-                : "Die Nutzungszeit darf nicht außerhalb der Nutzungszeit des Fahrzeugs liegen. Fahrt muss in der Zukunft sein (Datum)";
-        },
-        filter: (value: Date) => DateTime.fromJSDate(value),
-    },
-    {
-        type: "input",
-        name: "bookCarDuration",
-        message: "Geben Sie die Dauer in Minuten an",
-        validate: (rawValue: any, answers: any) => {
-            let carToBook = CarManager.getInstance().getCarByID(lastSelectedCar_ID);
-            if (!carToBook) {
-                return false;
-            }
-
-            let parsedValue = parseInt(rawValue);
-
-            if (isNaN(parsedValue)) {
-                return "Keine Nummer eingegeben!";
-            } else {
-                if (carToBook.maxUsageDurationMinutes < parsedValue) {
-                    return "Dauer länger als maximale Nutzungsdauer des Fahrzeugs";
-                }
-
-                let bookingEndDateTime = answers.bookCarDate.plus(
-                    Duration.fromObject({ minutes: parsedValue })
-                );
-
-                if (
-                    !(
-                        bookingEndDateTime.hour < carToBook.latestUsageTime.hour ||
-                        (bookingEndDateTime.hour == carToBook.latestUsageTime.hour &&
-                            bookingEndDateTime.minute < carToBook.latestUsageTime.minute)
-                    )
-                ) {
-                    return "Länger als Nutzungszeit des Fahrzeugs";
-                }
-                return true;
-            }
-        },
-        filter: (value: any) => (isNaN(parseInt(value)) ? value : parseInt(value)),
-    },
-];
-
 function showBookCar() {
+    const bookCar = [
+        {
+            type: "date",
+            name: "bookCarDate",
+            message: "Geben Sie ein Datum und eine Zeit ein.",
+            default: new Date(),
+            locale: "de-DE",
+            format: {},
+            clearable: false,
+            validate: (enteredDateTime: DateTime, answers: any) => {
+                let carToBook = CarManager.getInstance().getCarByID(lastSelectedCar_ID);
+                if (!carToBook) {
+                    return "Kein Auto ausgewählt.";
+                }
+
+                //Prüfungen, dass Nutzungszeiten innerhalb Auto Nutzungszeit liegt
+                if (
+                    enteredDateTime >= DateTime.now() &&
+                    (enteredDateTime.hour > carToBook.earliestUsageTime.hour ||
+                        (enteredDateTime.hour == carToBook.earliestUsageTime.hour &&
+                            enteredDateTime.minute >= carToBook.earliestUsageTime.minute)) &&
+                    (enteredDateTime.hour < carToBook.latestUsageTime.hour ||
+                        (enteredDateTime.hour == carToBook.latestUsageTime.hour &&
+                            enteredDateTime.minute < carToBook.latestUsageTime.minute))
+                ) {
+                    if (carToBook!.existingRideContainsStartDateTime(enteredDateTime)) {
+                        return "Auto wurde in diesem Zeitraum bereits gebucht";
+                    } else {
+                        return true;
+                    }
+                } else {
+                    return "Die Nutzungszeit darf nicht außerhalb der Nutzungszeit des Fahrzeugs liegen. Fahrt muss in der Zukunft sein (Datum)";
+                }
+            },
+            filter: (value: Date) => DateTime.fromJSDate(value),
+        },
+        {
+            type: "input",
+            name: "bookCarDuration",
+            message: "Geben Sie die Dauer in Minuten an",
+            validate: (rawValue: any, answers: any) => {
+                let carToBook = CarManager.getInstance().getCarByID(lastSelectedCar_ID);
+                if (!carToBook) {
+                    return false;
+                }
+
+                let parsedValue = parseInt(rawValue);
+
+                if (isNaN(parsedValue)) {
+                    return "Keine Nummer eingegeben!";
+                } else {
+                    if (carToBook.maxUsageDurationMinutes < parsedValue) {
+                        return "Dauer länger als maximale Nutzungsdauer des Fahrzeugs";
+                    }
+
+                    const duration = Duration.fromObject({ minutes: parsedValue });
+
+                    let bookingEndDateTime = answers.bookCarDate.plus(duration);
+
+                    if (
+                        !(
+                            bookingEndDateTime.hour < carToBook.latestUsageTime.hour ||
+                            (bookingEndDateTime.hour == carToBook.latestUsageTime.hour &&
+                                bookingEndDateTime.minute < carToBook.latestUsageTime.minute)
+                        )
+                    ) {
+                        return "Länger als Nutzungszeit des Fahrzeugs";
+                    }
+                    if (
+                        carToBook!.hasAlreadyBookedRidesInTimeAndDuration(
+                            answers.bookCarDate,
+                            duration
+                        )
+                    ) {
+                        return "Auto wurde in diesem Zeitraum bereits gebucht";
+                    } else {
+                        return true;
+                    }
+                }
+            },
+            filter: (value: any) => (isNaN(parseInt(value)) ? value : parseInt(value)),
+        },
+    ];
     inquirer.prompt(bookCar).then((answers) => {
         let rideDraft = new Ride(
             answers.bookCarDate,
@@ -327,90 +339,91 @@ function showBookCar() {
         );
 
         console.log("Gesamter Fahrtpreis: " + rideDraft.getFullPrice());
+
+        RideManager.getInstance().saveRideToJson(rideDraft);
     });
 }
 
 //Auto hinzufügen
-const addCar = [
-    //Auto hinzufügen
-    {
-        type: "input",
-        name: "carDescription",
-        message: "Geben Sie folgenden Wert ein: Marke",
-    },
-    {
-        type: "list",
-        name: "carElectricDriveType",
-        message: "Wählen Sie die Antriebsart",
-        choices: driveTypeQuestions,
-    },
-    {
-        type: "date",
-        name: "carEarliestUsageTime",
-        message: "Geben Sie folgenden Wert ein: Früheste Nutzungsuhrzeit",
-        default: new Date("2000-01-01T10:00:00"),
-        locale: "de-DE",
-        format: { day: undefined, month: undefined, year: undefined },
-        clearable: false,
-        filter: (value: Date) => DateTime.fromJSDate(value),
-    },
-    {
-        type: "date",
-        name: "carLatestUsageTime",
-        message: "Geben Sie folgenden Wert ein: Späteste Nutzungsuhrzeit",
-        default: new Date("2000-01-01T20:00:00"),
-        locale: "de-DE",
-        format: { day: undefined, month: undefined, year: undefined },
-        clearable: false,
-
-        validate: (value: any, answers: any) =>
-            value > answers.carEarliestUsageTime
-                ? true
-                : "Die späteste Zeit muss nach der frühesten liegen",
-        filter: (value: Date) => DateTime.fromJSDate(value),
-    },
-    {
-        type: "input",
-        name: "carMaxUsageDurationMinutes",
-        message: "Geben Sie folgenden Wert ein: Maximale Nutzungsdauer",
-        default: 120,
-        validate: (value: any, answers: any) => {
-            // https://stackoverflow.com/a/7709819/3526350
-            let diffMs = answers.carLatestUsageTime - answers.carEarliestUsageTime;
-            let diffMins = Math.floor(diffMs / 60000);
-
-            let enteredValue = parseInt(value);
-
-            if (isNaN(enteredValue)) {
-                return "Keine Nummer eingegeben!";
-            } else {
-                if (diffMins < enteredValue) {
-                    return "Dauer liegt außerhalb der Nutzungszeit!";
-                } else {
-                    return true;
-                }
-            }
-        },
-        filter: (value: any) => (isNaN(parseInt(value)) ? value : parseInt(value)),
-    },
-    {
-        type: "input",
-        name: "carFlatRatePrice",
-        message: "Geben Sie folgenden Wert ein: Pauschaler Nutzungspreis",
-        //https://github.com/SBoudrias/Inquirer.js/issues/866#issuecomment-626265477
-        validate: (value: any) => (isNaN(parseFloat(value)) ? "Not a number!" : true),
-        filter: (value: any) => (isNaN(parseFloat(value)) ? value : parseFloat(value)),
-    },
-    {
-        type: "input",
-        name: "carPricePerMin",
-        message: "Geben Sie folgenden Wert ein: Preis pro Minute",
-        validate: (value: any) => (isNaN(parseFloat(value)) ? "Not a number!" : true),
-        filter: (value: any) => (isNaN(parseFloat(value)) ? value : parseFloat(value)),
-    },
-];
-
 function addCarMenu() {
+    const addCar = [
+        {
+            type: "input",
+            name: "carDescription",
+            message: "Geben Sie folgenden Wert ein: Marke",
+        },
+        {
+            type: "list",
+            name: "carElectricDriveType",
+            message: "Wählen Sie die Antriebsart",
+            choices: driveTypeQuestions,
+        },
+        {
+            type: "date",
+            name: "carEarliestUsageTime",
+            message: "Geben Sie folgenden Wert ein: Früheste Nutzungsuhrzeit",
+            default: new Date("2000-01-01T10:00:00"),
+            locale: "de-DE",
+            format: { day: undefined, month: undefined, year: undefined },
+            clearable: false,
+            filter: (value: Date) => DateTime.fromJSDate(value),
+        },
+        {
+            type: "date",
+            name: "carLatestUsageTime",
+            message: "Geben Sie folgenden Wert ein: Späteste Nutzungsuhrzeit",
+            default: new Date("2000-01-01T20:00:00"),
+            locale: "de-DE",
+            format: { day: undefined, month: undefined, year: undefined },
+            clearable: false,
+
+            validate: (value: any, answers: any) =>
+                value > answers.carEarliestUsageTime
+                    ? true
+                    : "Die späteste Zeit muss nach der frühesten liegen",
+            filter: (value: Date) => DateTime.fromJSDate(value),
+        },
+        {
+            type: "input",
+            name: "carMaxUsageDurationMinutes",
+            message: "Geben Sie folgenden Wert ein: Maximale Nutzungsdauer",
+            default: 120,
+            validate: (value: any, answers: any) => {
+                // https://stackoverflow.com/a/7709819/3526350
+                let diffMs = answers.carLatestUsageTime - answers.carEarliestUsageTime;
+                let diffMins = Math.floor(diffMs / 60000);
+
+                let enteredValue = parseInt(value);
+
+                if (isNaN(enteredValue)) {
+                    return "Keine Nummer eingegeben!";
+                } else {
+                    if (diffMins < enteredValue) {
+                        return "Dauer liegt außerhalb der Nutzungszeit!";
+                    } else {
+                        return true;
+                    }
+                }
+            },
+            filter: (value: any) => (isNaN(parseInt(value)) ? value : parseInt(value)),
+        },
+        {
+            type: "input",
+            name: "carFlatRatePrice",
+            message: "Geben Sie folgenden Wert ein: Pauschaler Nutzungspreis",
+            //https://github.com/SBoudrias/Inquirer.js/issues/866#issuecomment-626265477
+            validate: (value: any) => (isNaN(parseFloat(value)) ? "Not a number!" : true),
+            filter: (value: any) => (isNaN(parseFloat(value)) ? value : parseFloat(value)),
+        },
+        {
+            type: "input",
+            name: "carPricePerMin",
+            message: "Geben Sie folgenden Wert ein: Preis pro Minute",
+            validate: (value: any) => (isNaN(parseFloat(value)) ? "Not a number!" : true),
+            filter: (value: any) => (isNaN(parseFloat(value)) ? value : parseFloat(value)),
+        },
+    ];
+
     inquirer.prompt(addCar).then((answers) => {
         console.log(answers);
 
@@ -456,6 +469,3 @@ function showAllRides() {
 }
 
 mainMenu();
-//let testUser: User = new User();
-/*testUser.pastBookedRides();
-        console.log(testUser.averageCost());*/
