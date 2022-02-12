@@ -8,7 +8,6 @@ import { RideManager } from "./RideManager";
 import { DateTime, Duration } from "luxon";
 import { Ride } from "./Ride";
 
-let questionAnswers: any = {};
 let lastSelectedCar_ID: number;
 
 const driveTypeQuestions = [
@@ -211,7 +210,13 @@ function filteredCarsList(carDescriptionSearchTerm: string, carDriveType: boolea
     inquirer.prompt(createShowCarsQuestionFromCarList(filteredCars)).then((answers) => {
         if (answers.carChoice) {
             lastSelectedCar_ID = answers.carChoice;
-            showBookCar();
+            if (UserManager.getInstance().isLoggedInUser()) {
+                showBookCar();
+            }else{
+                console.log("Sie sind nicht angemeldet, bitte melden Sie sich erst an!");
+                mainMenu();
+            }
+
         } else {
             console.log("Keine Autos mit diesen Parametern gefunden");
             searchMenu();
@@ -263,13 +268,13 @@ function showAllCarsMenu() {
 }
 
 //Auto buchen
-function showBookCar() {
+function showBookCar(carDateTime: Date = new Date(), carDuration: number = 30) {
     const bookCar = [
         {
             type: "date",
             name: "bookCarDate",
             message: "Geben Sie ein Datum und eine Zeit ein.",
-            default: new Date(),
+            default: carDateTime,
             locale: "de-DE",
             format: {},
             clearable: false,
@@ -298,6 +303,7 @@ function showBookCar() {
         {
             type: "input",
             name: "bookCarDuration",
+            default: carDuration,
             message: "Geben Sie die Dauer in Minuten an",
             validate: (rawValue: any, answers: any) => {
                 let carToBook = CarManager.getInstance().getCarByID(lastSelectedCar_ID);
@@ -350,8 +356,9 @@ function showBookCar() {
         );
 
         console.log("Gesamter Fahrtpreis: " + rideDraft.getFullPrice());
-
+        console.log("Fahrt wurde gebucht!");
         RideManager.getInstance().saveRideToJson(rideDraft);
+        mainMenu();
     });
 }
 
@@ -364,7 +371,12 @@ function filteredCarListDateTimeDuration(carDateTime: DateTime, carDuration: Dur
     inquirer.prompt(createShowCarsQuestionFromCarList(filteredCarsOutput)).then((answers) => {
         if (answers.carChoice) {
             lastSelectedCar_ID = answers.carChoice;
-            showBookCar();
+            if (UserManager.getInstance().isLoggedInUser()) {
+                showBookCar(carDateTime.toJSDate(), carDuration.minutes);
+            }else{
+                console.log("Sie sind nicht angemeldet, bitte melden Sie sich erst an!");
+                mainMenu();
+            }
         } else {
             console.log("Keine Autos mit diesen Parametern gefunden");
             mainMenu();
@@ -407,7 +419,10 @@ function filterForDateTimeDurationMenu() {
         },
     ];
     inquirer.prompt(filterForDateTimeDurationQuestions).then((answers) => {
-        filteredCarListDateTimeDuration(answers.filterCarDateAndTime, answers.filterCarDuration);
+        filteredCarListDateTimeDuration(
+            answers.filterCarDateAndTime,
+            Duration.fromObject({ minutes: answers.filterCarDuration })
+        );
     });
 }
 
