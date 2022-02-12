@@ -91,4 +91,8 @@ export class UserManager {
     public getCurrentlyLoggedInUser(): User | undefined {
         return this.currentlyLoggedInUser;
     }
+
+    public isLoggedInUser(): boolean {
+        return this.currentlyLoggedInUser != undefined;
+    }
 }
