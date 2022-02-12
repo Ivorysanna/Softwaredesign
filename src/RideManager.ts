@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { Duration } from "luxon";
+import { DateTime, Duration } from "luxon";
 import { Car } from "./Car";
 import { CarManager } from "./CarManager";
 import { Ride } from "./Ride";
@@ -36,10 +36,10 @@ export class RideManager {
             }
 
             let newRide = new Ride(
-                Utils.parseDateTimeString(element.timestamp),
+                DateTime.fromISO(element.timestamp),
                 Duration.fromObject({ minutes: element.duration }),
                 user,
-                car,
+                car
             );
             rideObjects.push(newRide);
         });
@@ -48,7 +48,7 @@ export class RideManager {
 
     public getRidesForCar(carToSearch: Car): Ride[] {
         const ridesList: Ride[] = this.listOfAvailableRides();
-        return ridesList.filter((eachRide) => eachRide.bookedCar == carToSearch);
+        return ridesList.filter((eachRide) => eachRide.bookedCar.car_ID == carToSearch.car_ID);
     }
 
     public getRidesForUser(userToSearch: User): Ride[] {
@@ -56,4 +56,21 @@ export class RideManager {
         return ridesList.filter((eachRide) => eachRide.user.user_ID == userToSearch.user_ID);
     }
 
+    public saveRideToJson(rideToSave: Ride): boolean {
+        const ridesList: Ride[] = this.listOfAvailableRides();
+
+        let rawData = fs.readFileSync("data/rides.json");
+        let rideData = JSON.parse(rawData.toString());
+
+        rideData.push({
+            user_ID: rideToSave.user.user_ID,
+            timestamp: rideToSave.timestamp,
+            duration: rideToSave.duration.minutes,
+            car_ID: rideToSave.bookedCar.car_ID,
+        });
+
+        fs.writeFileSync("data/rides.json", JSON.stringify(rideData));
+
+        return true;
+    }
 }
