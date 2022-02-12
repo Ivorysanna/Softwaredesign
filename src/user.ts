@@ -21,19 +21,6 @@ export class User {
         return "Bis jetzt wurden: " + outputRides + " gebucht.";
     }
 
-    //Average Cost wird berechnet
-    public averageCost(): String {
-        let rawData = fs.readFileSync("data/rides.json");
-        let allRides = JSON.parse(rawData.toString());
-        let bookedRides = allRides["bookedRides"];
-        let logAllRides = 0;
-        for (let i = 0; i < bookedRides.length; i++) {
-            logAllRides += bookedRides[i].price;
-        }
-        let averageCost = logAllRides / bookedRides.length;
-        return "Durchschnittskosten betragen: " + averageCost + " €.";
-    }
-
     public getAverageRideCost(): number {
         const rides: Ride[] = RideManager.getInstance().getRidesForUser(this);
 
