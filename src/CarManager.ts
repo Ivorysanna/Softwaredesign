@@ -1,6 +1,6 @@
 import { Car } from "./Car";
 import * as fs from "fs";
-import { DateTime } from "luxon";
+import { DateTime, Duration, Interval } from "luxon";
 
 export class CarManager {
     //Singleton für einfachen Zugriff auf CarManager
@@ -74,7 +74,28 @@ export class CarManager {
         return true;
     }
 
-    // public searchCar(): Car[] {
-    //     return null;
-    // }
+    public getCarsWithoutRidesInInterval(startDateTime: DateTime, duration: Duration) {
+        const newInterval: Interval = Interval.fromDateTimes(
+            startDateTime,
+            startDateTime.plus(duration)
+        );
+
+        let filteredCars: Car[] = [];
+
+        return this.listOfAvailableCars().filter((eachCar: Car) => {
+            if (newInterval.length("minutes") > eachCar.maxUsageDurationMinutes) {
+                return false;
+            }
+
+            if (eachCar.hasAlreadyBookedRidesInTimeAndDuration(startDateTime, duration)) {
+                return false;
+            }
+
+            if (!eachCar.isIntervalBetweenEarliestAndLatestUsageTime(startDateTime, duration)) {
+                return false;
+            }
+
+            return true;
+        });
+    }
 }
