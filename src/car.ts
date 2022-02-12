@@ -1,5 +1,7 @@
-import { DateTime } from "luxon";
+import { DateTime, Duration, Interval } from "luxon";
 import * as fs from "fs";
+import { RideManager } from "./RideManager";
+import { Ride } from "./Ride";
 
 export class Car {
     public car_ID: number;
@@ -33,9 +35,11 @@ export class Car {
 
     // e.g. "BMW i3 (E) - 9:00-14:00 Uhr, 10€ FP + 3€ pro Min."
     public printString(): string {
-        return `${this.description} : ${this.electricDriveType ? "(E)" : ""} ${this.earliestUsageTime.toFormat(
+        return `${this.description} : ${
+            this.electricDriveType ? "(E)" : ""
+        } ${this.earliestUsageTime.toFormat("HH:mm")} - ${this.latestUsageTime.toFormat(
             "HH:mm"
-        )} - ${this.latestUsageTime.toFormat("HH:mm")} Uhr, ${this.flatRatePrice} € Nutzungspreis ${this.pricePerMin} € pro Min.`;
+        )} Uhr, ${this.flatRatePrice} € Nutzungspreis ${this.pricePerMin} € pro Min.`;
     }
     public getCarStatus(): boolean {
         return true;
@@ -49,5 +53,26 @@ export class Car {
             logAllCars += allCars[i].description;
         }
         return this.description;
+    }
+
+    public hasAlreadyBookedRidesInTimeAndDuration(startDateTime: DateTime, duration: Duration): boolean {
+        const ridesForCar = RideManager.getInstance().getRidesForCar(this);
+        
+        let newInterval: Interval = Interval.fromDateTimes(startDateTime, startDateTime.plus(duration));
+        
+        return ridesForCar.some((eachRide: Ride) => {
+            let rideInterval: Interval = Interval.fromDateTimes(eachRide.timestamp, eachRide.timestamp.plus(eachRide.duration));
+            return rideInterval.overlaps(newInterval);
+        });
+    }
+    
+    public existingRideContainsStartDateTime(startDateTime: DateTime): boolean {
+        const ridesForCar = RideManager.getInstance().getRidesForCar(this);
+        
+        return ridesForCar.some((eachRide: Ride) => {
+            let rideInterval: Interval = Interval.fromDateTimes(eachRide.timestamp, eachRide.timestamp.plus(eachRide.duration));
+            return rideInterval.contains(startDateTime);
+        });
+        
     }
 }
