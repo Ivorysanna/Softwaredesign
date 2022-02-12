@@ -41,17 +41,6 @@ export class Car {
             "HH:mm"
         )} Uhr, ${this.flatRatePrice} € Nutzungspreis ${this.pricePerMin} € pro Min.`;
     }
-    
-    public getCarDescription(): string {
-        let rawData = fs.readFileSync("data/cars.json");
-        let allCars = JSON.parse(rawData.toString());
-        //let carDescription = allCars["description"];
-        let logAllCars: String[] = [];
-        for (let i = 0; i < allCars.length; i++) {
-            logAllCars += allCars[i].description;
-        }
-        return this.description;
-    }
 
     public hasAlreadyBookedRidesInTimeAndDuration(
         startDateTime: DateTime,
