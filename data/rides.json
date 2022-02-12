@@ -1,27 +1,28 @@
 [
     {
         "user_ID": 1234,
-        "timestamp": "02.02.2022 14:00",
+        "timestamp": "2022-02-13T15:09:15.283+01:00",
         "duration": 40,
-        "car_ID": 2345,
-        "flatRatePrice": 20,
-        "pricePerMinute": 0.5
-    },
-
-    {
-        "user_ID": 1236,
-        "timestamp": "03.02.2022 15:00",
-        "duration": 60,
-        "car_ID": 2345,
-        "flatRatePrice": 20,
-        "pricePerMinute": 0.5
+        "car_ID": 2345
     },
     {
         "user_ID": 1236,
-        "timestamp": "04.02.2022 15:00",
+        "timestamp": "2022-02-13T15:09:15.283+01:00",
         "duration": 60,
-        "car_ID": 2346,
-        "flatRatePrice": 40,
-        "pricePerMinute": 0.8
-    }
+        "car_ID": 2345
+    },
+    {
+        "user_ID": 1236,
+        "timestamp": "2022-02-13T15:09:15.283+01:00",
+        "duration": 60,
+        "car_ID": 2346
+    },
+    {
+        "user_ID": 1236,
+        "timestamp": "2022-02-13T15:09:15.283+01:00",
+        "duration": 30,
+        "car_ID": 2345
+    },
+    { "user_ID": 1236, "timestamp": "2022-02-13T15:34:54.668+01:00", "duration": 30, "car_ID": 2 }
+    
 ]
