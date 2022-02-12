@@ -3,7 +3,7 @@ import { User } from "./User";
 
 export class UserManager {
     // Singleton data
-    private currentlyLoggedInUser?: User = undefined;
+    private currentlyLoggedInUser: User = this.getGuestUser();
 
     //Singleton für einfachen Zugriff auf UserManager
     private static instance: UserManager;
@@ -17,6 +17,7 @@ export class UserManager {
 
         return UserManager.instance;
     }
+
     public listOfAvailableUsers(): User[] {
         let rawData = fs.readFileSync("data/users.json");
         let userData = JSON.parse(rawData.toString());
@@ -31,6 +32,11 @@ export class UserManager {
             userObjects.push(newUser);
         });
         return userObjects;
+    }
+
+    // "Null-Object"
+    public getGuestUser(): User {
+        return new User(-1, false, "Gast", "");
     }
 
     // TODO
@@ -88,11 +94,11 @@ export class UserManager {
         return true;
     }
 
-    public getCurrentlyLoggedInUser(): User | undefined {
+    public getCurrentlyLoggedInUser(): User {
         return this.currentlyLoggedInUser;
     }
 
     public isLoggedInUser(): boolean {
-        return this.currentlyLoggedInUser != undefined;
+        return this.currentlyLoggedInUser.user_ID > 0;
     }
 }
