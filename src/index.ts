@@ -232,6 +232,7 @@ function createShowCarsQuestionFromCarList(carList: Car[]): any {
             type: "list",
             name: "carChoice",
             message: "Auto zum Buchen auswählen",
+            pageSize: 5,
             choices(answers: any) {
                 let choicesArray: any = [];
                 carList.forEach((eachCar: Car) => {
