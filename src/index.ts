@@ -23,7 +23,13 @@ function mainMenu() {
             type: "list",
             name: "loginOrSearch",
             message: "Wollen Sie sich anmelden, oder nach Autos suchen?",
-            choices: ["Anmelden", "Registrieren", "Suchen...", "Alle Fahrzeuge anzeigen"],
+            choices: [
+                "Anmelden",
+                "Registrieren",
+                "Suchen...",
+                "Fahrzeug nach Datum, Uhrzeit, Dauer filtern",
+                "Alle Fahrzeuge anzeigen",
+            ],
         },
     ];
     inquirer.prompt(mainMenuQuestions).then((answers) => {
@@ -39,6 +45,9 @@ function mainMenu() {
                 break;
             case "Alle Fahrzeuge anzeigen":
                 showAllCarsMenu();
+                break;
+            case "Fahrzeug nach Datum, Uhrzeit, Dauer filtern":
+                filterForDateTimeDurationMenu();
                 break;
             default:
                 console.error("Falschen Menüpunkt ausgewählt");
@@ -87,6 +96,7 @@ function loggedinCustomerMenu() {
             choices() {
                 let choicesArray = [
                     "Suchen...",
+                    "Fahrzeug nach Datum, Uhrzeit, Dauer filtern",
                     "Alle Autos anzeigen",
                     "Alle Kosten und Durchschnittskosten anzeigen",
                     "Alle Fahrten anzeigen",
@@ -103,6 +113,9 @@ function loggedinCustomerMenu() {
         switch (answers.loggedinCustomer) {
             case "Suchen...":
                 searchMenu();
+                break;
+            case "Fahrzeug nach Datum, Uhrzeit, Dauer filtern":
+                filterForDateTimeDurationMenu();
                 break;
             case "Alle Autos anzeigen":
                 showAllCarsMenu();
@@ -206,7 +219,6 @@ function filteredCarsList(carDescriptionSearchTerm: string, carDriveType: boolea
     });
 }
 
-//Liste von allen Autos anzeigen
 //TODO: Fahrzeuge die vorhanden sind, andere ensprechend markieren
 
 function createShowCarsQuestionFromCarList(carList: Car[]): any {
@@ -214,7 +226,7 @@ function createShowCarsQuestionFromCarList(carList: Car[]): any {
         {
             type: "list",
             name: "carChoice",
-            message: "Eine Liste von allen Autos",
+            message: "Auto zum Buchen auswählen",
             choices(answers: any) {
                 let choicesArray: any = [];
                 carList.forEach((eachCar: Car) => {
@@ -240,6 +252,11 @@ function showAllCarsMenu() {
             mainMenu();
         }
 
+        if (!answers.carChoice) {
+            console.log("Kein Auto gefunden...");
+            mainMenu();
+        }
+
         lastSelectedCar_ID = answers.carChoice;
         showBookCar();
     });
@@ -262,15 +279,10 @@ function showBookCar() {
                     return "Kein Auto ausgewählt.";
                 }
 
-                //Prüfungen, dass Nutzungszeiten innerhalb Auto Nutzungszeit liegt
+                //Prüfungen, ob Nutzungszeiten innerhalb Auto Nutzungszeit liegt
                 if (
                     enteredDateTime >= DateTime.now() &&
-                    (enteredDateTime.hour > carToBook.earliestUsageTime.hour ||
-                        (enteredDateTime.hour == carToBook.earliestUsageTime.hour &&
-                            enteredDateTime.minute >= carToBook.earliestUsageTime.minute)) &&
-                    (enteredDateTime.hour < carToBook.latestUsageTime.hour ||
-                        (enteredDateTime.hour == carToBook.latestUsageTime.hour &&
-                            enteredDateTime.minute < carToBook.latestUsageTime.minute))
+                    carToBook.isDateTimeBetweenEarliestAndLatestUsageTime(enteredDateTime)
                 ) {
                     if (carToBook!.existingRideContainsStartDateTime(enteredDateTime)) {
                         return "Auto wurde in diesem Zeitraum bereits gebucht";
@@ -307,10 +319,9 @@ function showBookCar() {
                     let bookingEndDateTime = answers.bookCarDate.plus(duration);
 
                     if (
-                        !(
-                            bookingEndDateTime.hour < carToBook.latestUsageTime.hour ||
-                            (bookingEndDateTime.hour == carToBook.latestUsageTime.hour &&
-                                bookingEndDateTime.minute < carToBook.latestUsageTime.minute)
+                        !carToBook.isIntervalBetweenEarliestAndLatestUsageTime(
+                            answers.bookCarDate,
+                            duration
                         )
                     ) {
                         return "Länger als Nutzungszeit des Fahrzeugs";
@@ -341,6 +352,62 @@ function showBookCar() {
         console.log("Gesamter Fahrtpreis: " + rideDraft.getFullPrice());
 
         RideManager.getInstance().saveRideToJson(rideDraft);
+    });
+}
+
+//Nach Fahrzeug filtern: Datum, Uhrzeit, Dauer
+function filteredCarListDateTimeDuration(carDateTime: DateTime, carDuration: Duration) {
+    let filteredCarsOutput: Car[] = CarManager.getInstance().getCarsWithoutRidesInInterval(
+        carDateTime,
+        carDuration
+    );
+    inquirer.prompt(createShowCarsQuestionFromCarList(filteredCarsOutput)).then((answers) => {
+        if (answers.carChoice) {
+            lastSelectedCar_ID = answers.carChoice;
+            showBookCar();
+        } else {
+            console.log("Keine Autos mit diesen Parametern gefunden");
+            mainMenu();
+        }
+    });
+}
+
+function filterForDateTimeDurationMenu() {
+    const filterForDateTimeDurationQuestions = [
+        {
+            type: "date",
+            name: "filterCarDateAndTime",
+            message: "Geben Sie die gewünschte Uhrzeit und das gewünschte Datum ein",
+            locale: "de-DE",
+            clearable: false,
+            filter: (value: Date) => DateTime.fromJSDate(value),
+            //Validieren, ob Datum nicht in Vergangenheit liegt
+            validate: (enteredDateTime: DateTime, answers: any) => {
+                if (enteredDateTime < DateTime.now()) {
+                    return "Datum liegt in der Vergangenheit";
+                } else {
+                    return true;
+                }
+            },
+        },
+        {
+            type: "input",
+            name: "filterCarDuration",
+            message: "Geben Sie die Dauer in Minuten an",
+            validate: (rawValue: any, answers: any) => {
+                let parsedValue = parseInt(rawValue);
+
+                if (isNaN(parsedValue)) {
+                    return "Keine Nummer eingegeben!";
+                } else {
+                    return true;
+                }
+            },
+            filter: (value: any) => (isNaN(parseInt(value)) ? value : parseInt(value)),
+        },
+    ];
+    inquirer.prompt(filterForDateTimeDurationQuestions).then((answers) => {
+        filteredCarListDateTimeDuration(answers.filterCarDateAndTime, answers.filterCarDuration);
     });
 }
 

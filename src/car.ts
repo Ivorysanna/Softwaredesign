@@ -55,24 +55,57 @@ export class Car {
         return this.description;
     }
 
-    public hasAlreadyBookedRidesInTimeAndDuration(startDateTime: DateTime, duration: Duration): boolean {
+    public hasAlreadyBookedRidesInTimeAndDuration(
+        startDateTime: DateTime,
+        duration: Duration
+    ): boolean {
         const ridesForCar = RideManager.getInstance().getRidesForCar(this);
-        
-        let newInterval: Interval = Interval.fromDateTimes(startDateTime, startDateTime.plus(duration));
-        
+
+        let newInterval: Interval = Interval.fromDateTimes(
+            startDateTime,
+            startDateTime.plus(duration)
+        );
+
         return ridesForCar.some((eachRide: Ride) => {
-            let rideInterval: Interval = Interval.fromDateTimes(eachRide.timestamp, eachRide.timestamp.plus(eachRide.duration));
+            let rideInterval: Interval = Interval.fromDateTimes(
+                eachRide.timestamp,
+                eachRide.timestamp.plus(eachRide.duration)
+            );
             return rideInterval.overlaps(newInterval);
         });
     }
-    
+
     public existingRideContainsStartDateTime(startDateTime: DateTime): boolean {
         const ridesForCar = RideManager.getInstance().getRidesForCar(this);
-        
+
         return ridesForCar.some((eachRide: Ride) => {
-            let rideInterval: Interval = Interval.fromDateTimes(eachRide.timestamp, eachRide.timestamp.plus(eachRide.duration));
+            let rideInterval: Interval = Interval.fromDateTimes(
+                eachRide.timestamp,
+                eachRide.timestamp.plus(eachRide.duration)
+            );
             return rideInterval.contains(startDateTime);
         });
-        
+    }
+
+    public isIntervalBetweenEarliestAndLatestUsageTime(dateTime: DateTime, duration: Duration) {
+        let bookingEndDateTime = dateTime.plus(duration);
+
+        return (
+            this.isDateTimeBetweenEarliestAndLatestUsageTime(dateTime) &&
+            (bookingEndDateTime.hour < this.latestUsageTime.hour ||
+                (bookingEndDateTime.hour == this.latestUsageTime.hour &&
+                    bookingEndDateTime.minute < this.latestUsageTime.minute))
+        );
+    }
+
+    public isDateTimeBetweenEarliestAndLatestUsageTime(dateTime: DateTime) {
+        return (
+            (dateTime.hour > this.earliestUsageTime.hour ||
+                (dateTime.hour == this.earliestUsageTime.hour &&
+                    dateTime.minute >= this.earliestUsageTime.minute)) &&
+            (dateTime.hour < this.latestUsageTime.hour ||
+                (dateTime.hour == this.latestUsageTime.hour &&
+                    dateTime.minute < this.latestUsageTime.minute))
+        );
     }
 }
