@@ -11,7 +11,7 @@ export class Car {
     public latestUsageTime: DateTime;
     public maxUsageDurationMinutes: number;
     public flatRatePrice: number;
-    public pricePerMin: number;
+    public pricePerMinute: number;
 
     constructor(
         car_ID: number,
@@ -21,7 +21,7 @@ export class Car {
         latestUsageTime: DateTime,
         maxUsageDurationMinutes: number,
         flatRatePrice: number,
-        pricePerMin: number
+        pricePerMinute: number
     ) {
         this.car_ID = car_ID;
         this.description = description;
@@ -30,7 +30,7 @@ export class Car {
         this.latestUsageTime = latestUsageTime;
         this.maxUsageDurationMinutes = maxUsageDurationMinutes;
         this.flatRatePrice = flatRatePrice;
-        this.pricePerMin = pricePerMin;
+        this.pricePerMinute = pricePerMinute;
     }
 
     // e.g. "BMW i3 (E) - 9:00-14:00 Uhr, 10€ FP + 3€ pro Min."
@@ -39,7 +39,7 @@ export class Car {
             this.electricDriveType ? "(E)" : ""
         } ${this.earliestUsageTime.toFormat("HH:mm")} - ${this.latestUsageTime.toFormat(
             "HH:mm"
-        )} Uhr, ${this.flatRatePrice} € Nutzungspreis ${this.pricePerMin} € pro Min.`;
+        )} Uhr, ${this.flatRatePrice} € Nutzungspreis ${this.pricePerMinute} € pro Min.`;
     }
 
     public hasAlreadyBookedRidesInTimeAndDuration(
@@ -74,7 +74,7 @@ export class Car {
         });
     }
 
-    public isIntervalBetweenEarliestAndLatestUsageTime(dateTime: DateTime, duration: Duration) {
+    public isIntervalBetweenEarliestAndLatestUsageTime(dateTime: DateTime, duration: Duration): boolean {
         let bookingEndDateTime = dateTime.plus(duration);
 
         return (
@@ -85,7 +85,7 @@ export class Car {
         );
     }
 
-    public isDateTimeBetweenEarliestAndLatestUsageTime(dateTime: DateTime) {
+    public isDateTimeBetweenEarliestAndLatestUsageTime(dateTime: DateTime): boolean {
         return (
             (dateTime.hour > this.earliestUsageTime.hour ||
                 (dateTime.hour == this.earliestUsageTime.hour &&

@@ -32,7 +32,7 @@ export class Ride {
         }
 
 
-        return car.flatRatePrice + this.duration.minutes * car.pricePerMin;
+        return car.flatRatePrice + this.duration.minutes * car.pricePerMinute;
     }
 
     // e.g. "BMW i3 (E) - 14:00, Dauer: 40 min, Gesamt Preis: 30 €"

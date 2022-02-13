@@ -1,14 +1,14 @@
 import { DateTime, Duration } from "luxon";
 
 export class Utils {
-    private static readonly format = "dd.MM.yyyy hh:mm";
+    private static readonly FORMAT = "dd.MM.yyyy hh:mm";
 
     public static parseDateTimeString(dateTimeString: string) {
-        return DateTime.fromFormat(dateTimeString, this.format);
+        return DateTime.fromFormat(dateTimeString, this.FORMAT);
     }
 
-    public static printFormattedDateTimeString(dateTime: DateTime) {
-        return dateTime.toFormat(this.format);
+    public static printFormattedDateTimeString(dateTime: DateTime): string {
+        return dateTime.toFormat(this.FORMAT);
     }
 
     // Format: '14:00'

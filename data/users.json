@@ -1,5 +1,4 @@
 [
-    { "user_ID": 1234, "isAdmin": true, "username": "John", "password": "123" },
-    { "user_ID": 1235, "isAdmin": false, "username": "Kuro", "password": "futter" },
-    { "user_ID": 1236, "isAdmin": true, "username": "a", "password": "a" }
+    { "user_ID": 1234, "isAdmin": false, "username": "John", "password": "123" },
+    { "user_ID": 1236, "isAdmin": true, "username": "Admin", "password": "admin" }
 ]

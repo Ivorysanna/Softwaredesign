@@ -74,7 +74,7 @@ export class CarManager {
         return true;
     }
 
-    public getCarsWithoutRidesInInterval(startDateTime: DateTime, duration: Duration) {
+    public getCarsWithoutRidesInInterval(startDateTime: DateTime, duration: Duration): Car[] {
         const newInterval: Interval = Interval.fromDateTimes(
             startDateTime,
             startDateTime.plus(duration)

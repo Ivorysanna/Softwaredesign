@@ -27,7 +27,7 @@ export class User {
         return this.getSumRideCost() / rides.length;
     }
 
-    public getSumRideCost() {
+    public getSumRideCost(): number {
         const rides: Ride[] = RideManager.getInstance().getRidesForUser(this);
 
         let sum = 0;
