@@ -84,8 +84,7 @@ function loginMenu() {
     });
 }
 
-//Menu für angemeldete Kunden
-
+//Menu für angemeldete User
 function loggedinCustomerMenu() {
     const loggedinCustomerQuestions = [
         {
@@ -224,8 +223,8 @@ function filteredCarsList(carDescriptionSearchTerm: string, carDriveType: boolea
     });
 }
 
-//TODO: Fahrzeuge die vorhanden sind, andere ensprechend markieren
 
+// Erstellen von eine Car Liste
 function createShowCarsQuestionFromCarList(carList: Car[]): any {
     return [
         {
@@ -250,6 +249,7 @@ function createShowCarsQuestionFromCarList(carList: Car[]): any {
     ];
 }
 
+//Alle Autos hinzufügen
 function showAllCarsMenu() {
     let listOfCars = CarManager.getInstance().listOfAvailableCars();
     inquirer.prompt(createShowCarsQuestionFromCarList(listOfCars)).then((answers) => {
@@ -460,6 +460,7 @@ function addCarMenu() {
             format: { day: undefined, month: undefined, year: undefined },
             clearable: false,
 
+            //Datum validieren
             validate: (value: any, answers: any) =>
                 value > answers.carEarliestUsageTime
                     ? true
