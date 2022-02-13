@@ -6,7 +6,11 @@ export class CarManager {
     //Singleton für einfachen Zugriff auf CarManager
     private static instance: CarManager;
 
-    private constructor() {}
+    private constructor() {
+        if(CarManager.instance){
+            throw new Error("Instanz ist schon vorhanden");
+        }
+    }
 
     public static getInstance(): CarManager {
         if (!CarManager.instance) {

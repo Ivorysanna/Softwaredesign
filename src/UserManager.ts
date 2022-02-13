@@ -8,7 +8,11 @@ export class UserManager {
     //Singleton für einfachen Zugriff auf UserManager
     private static instance: UserManager;
 
-    private constructor() {}
+    private constructor() {
+        if(UserManager.instance){
+            throw new Error("Instanz ist schon vorhanden");
+        }
+    }
 
     public static getInstance(): UserManager {
         if (!UserManager.instance) {

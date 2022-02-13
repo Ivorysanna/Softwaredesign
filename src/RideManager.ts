@@ -5,13 +5,17 @@ import { CarManager } from "./CarManager";
 import { Ride } from "./Ride";
 import { User } from "./User";
 import { UserManager } from "./UserManager";
-import { Utils } from "./Utils";
+
 
 export class RideManager {
     //Singleton für einfachen Zugriff auf RideManager
     private static instance: RideManager;
 
-    private constructor() {}
+    private constructor() {
+        if(RideManager.instance){
+            throw new Error("Instanz ist schon vorhanden");
+        }
+    }
 
     public static getInstance(): RideManager {
         if (!RideManager.instance) {
