@@ -39,7 +39,6 @@ export class UserManager {
         return new User(-1, false, "Gast", "");
     }
 
-    // TODO
     public loginUser(username: string, password: string): boolean {
         const userToLogin = this.getUserByName(username);
 
