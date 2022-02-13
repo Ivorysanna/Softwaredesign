@@ -22,7 +22,7 @@
         "ts-jest": "^27.1.2"
     },
     "scripts": {
-        "start": "node ./bin/index.js",
+        "start": "node ./dist/index.js",
         "watch": "nodemon --no-stdin ./src/index.ts",
         "debug": "nodemon --inspect --no-stdin ./src/index.ts",
         "build": "tsc",
