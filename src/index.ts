@@ -211,18 +211,16 @@ function filteredCarsList(carDescriptionSearchTerm: string, carDriveType: boolea
             lastSelectedCar_ID = answers.carChoice;
             if (UserManager.getInstance().isLoggedInUser()) {
                 showBookCar();
-            }else{
+            } else {
                 console.log("Sie sind nicht angemeldet, bitte melden Sie sich erst an!");
                 mainMenu();
             }
-
         } else {
             console.log("Keine Autos mit diesen Parametern gefunden");
             searchMenu();
         }
     });
 }
-
 
 // Erstellen von eine Car Liste
 function createShowCarsQuestionFromCarList(carList: Car[]): any {
@@ -256,15 +254,13 @@ function showAllCarsMenu() {
         if (!UserManager.getInstance().isLoggedInUser()) {
             console.log("Sie sind nicht angemeldet, bitte melden Sie sich erst an!");
             mainMenu();
-        }
-
-        if (!answers.carChoice) {
+        } else if (!answers.carChoice) {
             console.log("Kein Auto gefunden...");
             mainMenu();
+        } else {
+            lastSelectedCar_ID = answers.carChoice;
+            showBookCar();
         }
-
-        lastSelectedCar_ID = answers.carChoice;
-        showBookCar();
     });
 }
 
@@ -374,7 +370,7 @@ function filteredCarListDateTimeDuration(carDateTime: DateTime, carDuration: Dur
             lastSelectedCar_ID = answers.carChoice;
             if (UserManager.getInstance().isLoggedInUser()) {
                 showBookCar(carDateTime.toJSDate(), carDuration.minutes);
-            }else{
+            } else {
                 console.log("Sie sind nicht angemeldet, bitte melden Sie sich erst an!");
                 mainMenu();
             }
