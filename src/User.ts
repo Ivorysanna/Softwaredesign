@@ -24,7 +24,9 @@ export class User {
     public getAverageRideCost(): number {
         const rides: Ride[] = RideManager.getInstance().getRidesForUser(this);
 
-        return this.getSumRideCost() / rides.length;
+        let average = this.getSumRideCost() / rides.length;
+
+        return Math.round(average * 100) / 100;
     }
 
     public getSumRideCost(): number {
@@ -35,6 +37,6 @@ export class User {
             sum += eachRide.getFullPrice();
         });
 
-        return sum;
+        return Math.round(sum * 100) / 100;
     }
 }
